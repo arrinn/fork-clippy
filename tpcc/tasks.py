@@ -1,0 +1,138 @@
+import logging
+import os
+import subprocess
+
+from .exceptions import ClientError
+from . import helpers
+
+
+parent = os.path.dirname
+
+
+# --------------------------------------------------------------------
+
+class TaskConfig(object):
+    def __init__(self, json_conf):
+        self.json_conf = json_conf
+
+    @property
+    def theory(self):
+        return self._attr_value("theory", required=False)
+
+    # List of profiles for testing
+    @property
+    def test_profiles(self):
+        return self._attr_value("test_profiles", required=False)
+
+    # List of solution files
+    @property
+    def solution_files(self):
+        return self._attr_value("submit_files", required=True)
+
+    # List solution files or not
+    @property
+    def lint_files(self):
+        return self._attr_value("lint_files", required=False)
+
+    @property
+    def test_targets(self):
+        return self._attr_value("test_targets", required=False) or ["unit_test", "stress_test"]
+
+    @property
+    def forbidden_patterns(self):
+        return self._attr_value("forbidden_patterns", required=False)
+
+    @property
+    def test_perf(self):
+        return self._attr_value("test_perf", required=False)
+
+    def _attr_value(self, name, required=True):
+        if name in self.json_conf:
+            return self.json_conf[name]
+        else:
+            if not required:
+                return None
+            else:
+                raise ClientError(
+                    "Required attribute '{}' not found in task config".format(name))
+
+
+# --------------------------------------------------------------------
+
+class Task(object):
+    def __init__(self, dir, homework, name, conf):
+        self.dir = dir
+        self.homework = homework
+        self.name = name
+        self.conf = TaskConfig(conf)
+
+    @property
+    def fullname(self):
+        return "{}/{}".format(self.homework, self.name)
+
+    @property
+    def all_tests_target(self):
+        return self._target("run_all_tests")
+
+    @property
+    def test_targets(self):
+        return [self._target(t) for t in self.conf.test_targets]
+
+    @property
+    def has_benchmark(self):
+        return os.path.exists(os.path.join(self.dir, "benchmark.cpp"))
+
+    @property
+    def benchmark_target(self):
+        return self._target("benchmark")
+
+    @property
+    def run_benchmark_target(self):
+        return self._target("run_benchmark")
+
+    def _target(self, name):
+        return "{homework}_{task}_{target}".format(
+            homework=self.homework, task=self.name, target=name)
+
+
+# --------------------------------------------------------------------
+
+# Tasks "repository" (tasks directory in course repo)
+
+class Tasks(object):
+    def __init__(self, git_repo):
+        self.root_dir = self.tasks_root_directory(git_repo)
+
+    @staticmethod
+    def tasks_root_directory(git_repo):
+        return os.path.join(git_repo.working_tree_dir, 'tasks')
+
+    def get_dir_task(self, dir):
+        task_conf_path = os.path.join(dir, 'task.json')
+
+        if not os.path.exists(task_conf_path):
+            logging.debug("Task conf not found: {}".format(task_conf_path))
+            return None
+
+        probably_tasks_root_dir = parent(parent(dir))
+
+        if probably_tasks_root_dir != self.root_dir:
+            logging.debug("Unexpected tasks root directory: {}".format(
+                probably_tasks_root_dir))
+            return None
+
+        # definitely task directory
+
+        try:
+            conf = helpers.load_json(task_conf_path)
+        except BaseException:
+            raise ClientError(
+                "Cannot load task config: '{}'".format(task_conf_path))
+
+        homework_name = os.path.basename(parent(dir))
+        task_name = os.path.basename(dir)
+
+        return Task(dir, homework_name, task_name, conf)
+
+    def current_dir_task(self):
+        return self.get_dir_task(os.getcwd())

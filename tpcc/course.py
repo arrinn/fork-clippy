@@ -19,6 +19,8 @@ import shutil
 import subprocess
 import sys
 
+from pathlib import Path
+
 
 class CourseClient:
     def __init__(self):
@@ -31,7 +33,7 @@ class CourseClient:
         this_tool_real_path = os.path.realpath(__file__)
         repo_root_dir = helpers.git_repo_root_dir(
             os.path.dirname(this_tool_real_path))
-        return git.Repo(repo_root_dir)
+        return git.Repo(Path(repo_root_dir).parent)
 
     def _reopen_solutions(self):
         self.solutions = Solutions.open(self.repo, ".grade.gitlab-ci.yml")

@@ -12,7 +12,7 @@ class ClangFormat(object):
     _names = [
         "clang-format",
         "clang-format-9.0",
-        "clang-format-8.0",
+        "clang-format-8",
         "clang-format-7.0",
         "clang-format-6.0",
     ]
@@ -49,7 +49,7 @@ class ClangTidy(object):
 
     _names = [
         "clang-tidy",
-        "clang-tidy-8.0",
+        "clang-tidy-8",
         "clang-tidy-7.0",
         "clang-tidy-6.0",
         "clang-tidy-5.0"

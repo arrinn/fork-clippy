@@ -129,7 +129,8 @@ class Installer(object):
         os.chdir(self.installer_dir)
 
         print("Creating virtual environment...")
-        self._run(['python3', '-m', 'virtualenv', 'venv', '-p', 'python3'])
+        self._run(['python3', '-m', 'venv', 'venv'])
+        #self._run(['python3', '-m', 'virtualenv', 'venv', '-p', 'python3'])
 
         venv_pip = os.path.join(self.venv_dir, 'bin/pip')
 

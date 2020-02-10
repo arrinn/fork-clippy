@@ -87,41 +87,46 @@ class Installer(object):
         with open(self._profile_path(profile), 'a') as f:
             f.write('\n' + command + '\n')
 
-    def _is_virtualenv_installed(self):
+    def _is_venv_installed(self):
         try:
-            subprocess.check_call(['python3', '-m', 'virtualenv', '--version'])
+            subprocess.check_call(['python3', '-m', 'venv', '--help'])
         except subprocess.CalledProcessError as error:
             return False
         return True
 
-    def _install_virtualenv_linux(self):
+    def _install_venv_linux(self):
         distname, _, _ = platform.linux_distribution()
 
         if distname == 'Ubuntu':
-            if query_yesno('Install virtualenv via apt-get?'):
+            if query_yesno('Install venv via apt-get?'):
                 self._run(['sudo', 'apt-get', 'update'])
-                self._run(['sudo', 'apt-get', 'install', 'python3-virtualenv'])
+                self._run(['sudo', 'apt-get', 'install', 'python3-venv'])
             else:
-                self._interrupt('Please install virtualenv manually.')
+                self._interrupt('Please install venv manually.')
+        else:
+            self._interrupt('Please install venv manually.')
+
+        """
         elif distname == 'arch':
             if query_yesno('Install virtualenv via pacman?'):
                 self._run(['sudo', 'pacman', '-S',
                            'python-virtualenv', '--noconfirm'])
             else:
                 self._interrupt('Please install virtualenv manually.')
+        """
 
-    def _install_virtualenv_darwin(self):
-        if query_yesno('Install virtualenv using pip?'):
-            self._run(['python3', '-m', 'pip', 'install', 'virtualenv'])
+    def _install_venv_darwin(self):
+        if query_yesno('Install venv using pip?'):
+            self._run(['python3', '-m', 'pip', 'install', 'venv'])
         else:
-            self._interrupt('Please install virtualenv manually.')
+            self._interrupt('Please install venv manually.')
 
-    def _install_virtualenv(self):
+    def _install_venv(self):
         system = platform.system()
         if system == 'Linux':
-            self._install_virtualenv_linux()
+            self._install_venv_linux()
         elif system == 'Darwin':
-            self._install_virtualenv_darwin()
+            self._install_venv_darwin()
         else:
             self._fail("System is not supported: '{}'".format(system))
 
@@ -130,7 +135,6 @@ class Installer(object):
 
         print("Creating virtual environment...")
         self._run(['python3', '-m', 'venv', 'venv'])
-        #self._run(['python3', '-m', 'virtualenv', 'venv', '-p', 'python3'])
 
         venv_pip = os.path.join(self.venv_dir, 'bin/pip')
 
@@ -160,9 +164,9 @@ class Installer(object):
                         'bin')))
 
     def install(self, alias):
-        if not self._is_virtualenv_installed():
-            print('You seem to have no virtualenv installed.')
-            self._install_virtualenv()
+        if not self._is_venv_installed():
+            print('You seem to have no venv installed.')
+            self._install_venv()
         self._create_venv()
         self._create_proxy(alias)
         self._create_path_file()

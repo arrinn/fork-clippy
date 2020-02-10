@@ -49,6 +49,7 @@ class ClangTidy(object):
 
     _names = [
         "clang-tidy",
+        "clang-tidy-8.0",
         "clang-tidy-7.0",
         "clang-tidy-6.0",
         "clang-tidy-5.0"

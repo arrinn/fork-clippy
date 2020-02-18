@@ -15,7 +15,7 @@ def pick():
             return "Good evening, {}!"
 
     def random_greeting():
-        candidates = ["Hi, {}!", "What's up, {}?"]
+        candidates = ["Hi, {}!", "What's up, {}?", "Howdy, {}!"]
         return random.choice(candidates)
 
     if random.random() < 0.3:

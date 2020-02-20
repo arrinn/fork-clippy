@@ -167,12 +167,13 @@ class Installer(object):
         if not self._is_venv_installed():
             print('You seem to have no venv installed.')
             self._install_venv()
+        self._remove_venv()
         self._create_venv()
         self._create_proxy(alias)
         self._create_path_file()
         self._update_profile()
 
-    def _remove_env(self):
+    def _remove_venv(self):
         print("Removing existing venv directory...")
 
         if not os.path.exists(self.venv_dir):

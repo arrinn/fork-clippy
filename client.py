@@ -214,7 +214,7 @@ def create_cmdline_parser():
     help.set_defaults(cmd=help_command)
 
     update = subparsers.add_parser("update", help="Update local repo")
-    update.add_argument("--all", action="store_true", default=False, help="All submodules")
+    update.add_argument("--all", action="store_true", default=True, help="All submodules")
     update.set_defaults(cmd=update_command)
 
     cmake = subparsers.add_parser("cmake", help="Generate build scripts")

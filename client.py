@@ -250,7 +250,7 @@ def create_cmdline_parser():
 
     validate = subparsers.add_parser(
         "validate",
-        help="Validate current task sources")
+        help="Validate current task sources (linters, forbidden patterns)")
     validate.set_defaults(cmd=validate_command)
 
     test_perf = subparsers.add_parser(
@@ -298,11 +298,11 @@ def create_cmdline_parser():
     apply.set_defaults(cmd=apply_command)
 
     push = subparsers.add_parser(
-        "push", help="Push task branch to remote")
+        "push", help="Push task branch commits to remote solutions repo")
     push.set_defaults(cmd=push_command)
 
     merge = subparsers.add_parser(
-        "merge-request", help="Submit current task solution", aliases=["merge"])
+        "merge-request", help="Create merge request for current task", aliases=["merge"])
     merge.set_defaults(cmd=merge_command)
 
     solutions_info = subparsers.add_parser(

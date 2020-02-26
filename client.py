@@ -213,7 +213,7 @@ def create_cmdline_parser():
     help = subparsers.add_parser("help", help="print help")
     help.set_defaults(cmd=help_command)
 
-    update = subparsers.add_parser("update", help="Update local repo")
+    update = subparsers.add_parser("update", help="Update local repo (+ submodules)")
     update.add_argument("--all", action="store_true", default=True, help="All submodules")
     update.set_defaults(cmd=update_command)
 

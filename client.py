@@ -302,7 +302,7 @@ def create_cmdline_parser():
     push.set_defaults(cmd=push_command)
 
     merge = subparsers.add_parser(
-        "merge", help="Submit current task solution")
+        "merge-request", help="Submit current task solution", aliases=["merge"])
     merge.set_defaults(cmd=merge_command)
 
     solutions_info = subparsers.add_parser(

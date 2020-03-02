@@ -214,21 +214,31 @@ class CourseClient:
                     "Applying clang-tidy --fix to {}".format(lint_targets))
                 clang_tidy.fix(lint_targets, include_dirs)
 
+        echo.blank_line()
+
         # clang-format
 
         clang_format = ClangFormat.locate()
 
-        if verify:
-            echo.echo(
-                "Checking {} with clang-format ({})".format(lint_targets, clang_format.binary))
-            ok, replacements = clang_format.check(lint_targets, style="file")
-            if not ok:
+        echo.echo(
+            "Checking {} with clang-format ({})".format(lint_targets, clang_format.binary))
+
+        ok, diffs = clang_format.check(lint_targets, style="file")
+        if diffs:
+            for target_file, diff in diffs.items():
+                echo.echo("File: {}".format(
+                    highlight.path(target_file)))
+                echo.write(diff)
+
+        if not ok:
+            if verify:
                 raise ClientError(
-                    "clang-format check failed: {} replacements".format(replacements))
-        else:
-            echo.echo(
-                "Applying clang-format ({}) to {}".format(clang_format.binary, lint_targets))
-            clang_format.apply_to(lint_targets, style="file")
+                    "clang-format check failed: replacements in {} file(s)".format(len(diffs)))
+            else:
+                files_to_format = list(diffs.keys())
+                echo.echo(
+                    "Applying clang-format ({}) to {}".format(clang_format.binary, files_to_format))
+                clang_format.apply_to(files_to_format, style="file")
 
     def _search_forbidden_patterns(self, task):
         forbidden_patterns = [
@@ -264,6 +274,7 @@ class CourseClient:
             return
 
         self.lint(task, verify=True)
+        echo.blank_line()
         self._search_forbidden_patterns(task)
 
     def _get_benchmark_scores(self, task):

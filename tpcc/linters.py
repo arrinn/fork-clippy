@@ -30,18 +30,27 @@ class ClangFormat(object):
         subprocess.check_call(cmd)
 
     def check(self, targets, style):
-        cmd = [self.binary, "-style", style,
-               "-output-replacements-xml"] + targets
-        report = subprocess.check_output(cmd).decode("utf-8")
+        diffs = self._diff_targets(targets, style)
+        no_replacements = not bool(diffs)
+        return no_replacements, diffs
 
-        # count replacements
-        count = 0
-        for line in report.splitlines():
-            if line.startswith("<replacement "):
-                count += 1
+    def _diff_target(self, file_name, style):
+        format_cmd = [self.binary, "-style", style, file_name]
+        diff_cmd = ["diff", file_name, "-"]
 
-        return count == 0, count
+        # link clang-format and diff with pipe
+        format = subprocess.Popen(format_cmd, stdout=subprocess.PIPE)
+        diff = subprocess.Popen(diff_cmd, stdin=format.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = diff.communicate()
+        return stdout.decode("utf-8")
 
+    def _diff_targets(self, targets, style):
+        diffs = {}
+        for file_name in targets:
+            diff = self._diff_target(file_name, style)
+            if diff:
+                diffs[file_name] = diff
+        return diffs
 
 class ClangTidy(object):
     def __init__(self, binary):

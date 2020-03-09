@@ -198,9 +198,10 @@ class CourseClient:
 
         clang_tidy = ClangTidy.locate()
 
-        include_dirs = [
-            os.path.join(self.repo.working_tree_dir, 'library/twist')
-        ]
+        include_dirs = helpers.get_immediate_subdirectories(
+            os.path.join(self.repo.working_tree_dir, "library"))
+
+        echo.echo("Include directories: {}".format(include_dirs))
 
         echo.echo(
             "Checking {} with clang-tidy ({})".format(lint_targets, clang_tidy.binary))

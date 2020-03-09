@@ -106,15 +106,6 @@ class Installer(object):
         else:
             self._interrupt('Please install venv manually.')
 
-        """
-        elif distname == 'arch':
-            if query_yesno('Install virtualenv via pacman?'):
-                self._run(['sudo', 'pacman', '-S',
-                           'python-virtualenv', '--noconfirm'])
-            else:
-                self._interrupt('Please install virtualenv manually.')
-        """
-
     def _install_venv_darwin(self):
         if query_yesno('Install venv using pip?'):
             self._run(['python3', '-m', 'pip', 'install', 'venv'])

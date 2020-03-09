@@ -276,6 +276,7 @@ class CourseClient:
 
         self.lint(task, verify=True)
         echo.blank_line()
+        # NB: after linters!
         self._search_forbidden_patterns(task)
 
     def _get_benchmark_scores(self, task):

@@ -93,7 +93,7 @@ def current_dir_task_or_die():
 
 
 def update_command(args):
-    client.update(args.all)
+    client.update()
     echo.done()
 
 
@@ -214,7 +214,6 @@ def create_cmdline_parser():
     help.set_defaults(cmd=help_command)
 
     update = subparsers.add_parser("update", help="Update local repo (+ submodules)")
-    update.add_argument("--all", action="store_true", default=True, help="All submodules")
     update.set_defaults(cmd=update_command)
 
     cmake = subparsers.add_parser("cmake", help="Generate build scripts")

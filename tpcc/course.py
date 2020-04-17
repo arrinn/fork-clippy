@@ -178,7 +178,9 @@ class CourseClient:
 
         os.chdir(task.dir)
 
-        lint_targets = task.conf.lint_files
+        lint_targets = helpers.all_files(task.dir, task.conf.lint_files)
+
+        echo.echo("Lint targets: {}".format(lint_targets))
 
         if not lint_targets:
             echo.echo("Nothing to lint")
@@ -192,7 +194,7 @@ class CourseClient:
 
         clang_tidy = ClangTidy.locate()
 
-        include_dirs = helpers.get_immediate_subdirectories(
+        include_dirs = [task.dir] + helpers.get_immediate_subdirectories(
             os.path.join(self.repo.working_tree_dir, "library"))
 
         echo.echo("Include directories: {}".format(include_dirs))
@@ -255,7 +257,9 @@ class CourseClient:
         echo.echo(
             "Searching for forbidden patterns in {}".format(solution_files))
 
-        for f in solution_files:
+        all_solution_files = helpers.all_files(task.dir, task.conf.solution_files)
+
+        for f in all_solution_files:
             source_code = open(f, 'rb').read().decode("utf-8").rstrip()
             for pattern in forbidden_patterns:
                 if source_code.find(pattern) != -1:

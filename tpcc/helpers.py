@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import subprocess
+from distutils import dir_util
 
 from .exceptions import ToolNotFound, ClientError
 
@@ -78,18 +79,40 @@ def get_repo_name(url):
     return name
 
 
-def copy_files(source_dir, dest_dir, files):
-    for file in files:
-        source_file_path = os.path.join(source_dir, file)
-        if not os.path.exists(source_file_path):
+def copy_files(source_dir, dest_dir, names):
+    for name in names:
+        source_path = os.path.join(source_dir, name)
+        if not os.path.exists(source_path):
             raise RuntimeError(
-                "File '{}' not found in '{}'".format(
-                    file, source_dir))
+                "File/dir '{}' not found in '{}'".format(
+                    name, source_dir))
 
-    for file in files:
-        source_file_path = os.path.join(source_dir, file)
-        shutil.copy(source_file_path, dest_dir)
+    for name in names:
+        source_path = os.path.join(source_dir, name)
+        if os.path.isdir(source_path):
+            # copy directory
+            dest_path = os.path.join(dest_dir, name)
+            dir_util.copy_tree(source_path, dest_path)
+        else:
+            # copy file
+            shutil.copy(source_path, dest_dir)
 
+def dir_files(path):
+    all_files = []
+    for dir_path, subdirs, files in os.walk(path):
+        for file in files:
+            all_files.append(os.path.join(dir_path, file))
+    return all_files
+
+def all_files(dir, names):
+    all = []
+    for name in names:
+        path = os.path.join(dir, name)
+        if os.path.isdir(path):
+            all.extend(dir_files(path))
+        else:
+            all.append(path)
+    return all
 
 class BackupDirectory:
     def __init__(self, dir, files):

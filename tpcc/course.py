@@ -194,8 +194,6 @@ class CourseClient:
 
         lint_targets = helpers.all_files(task.dir, task.conf.lint_files)
 
-        echo.echo("Lint targets: {}".format(lint_targets))
-
         if not lint_targets:
             echo.echo("Nothing to lint")
             return
@@ -213,7 +211,7 @@ class CourseClient:
         echo.echo("Include directories: {}".format(include_dirs))
 
         echo.echo(
-            "Checking {} with clang-tidy ({})".format(lint_targets, clang_tidy.binary))
+            "Checking {} with clang-tidy ({})".format(task.conf.lint_files, clang_tidy.binary))
 
         if not clang_tidy.check(lint_targets, include_dirs):
             if verify:
@@ -231,7 +229,7 @@ class CourseClient:
         clang_format = ClangFormat.locate()
 
         echo.echo(
-            "Checking {} with clang-format ({})".format(lint_targets, clang_format.binary))
+            "Checking {} with clang-format ({})".format(task.conf.lint_files, clang_format.binary))
 
         ok, diffs = clang_format.check(lint_targets, style="file")
         if diffs:

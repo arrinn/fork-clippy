@@ -29,10 +29,15 @@ class TaskConfig(object):
     def solution_files(self):
         return self._attr_value("submit_files", required=True)
 
-    # List solution files or not
+    # List of lint targets (= solution files?)
     @property
     def lint_files(self):
         return self._attr_value("lint_files", required=False)
+
+    # Workaround for clang-tidy
+    @property
+    def lint_includes(self):
+        return self._attr_value("lint_includes", required=False) or []
 
     @property
     def test_targets(self):

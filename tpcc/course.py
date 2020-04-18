@@ -173,17 +173,8 @@ class CourseClient:
 
     def _include_dirs(self, task):
         libs_path = os.path.join(self.repo.working_tree_dir, "library")
-
-        libs_include_dirs = [
-            "twist"
-        ]
-
-        # Workaround
-        if task.homework == "3-tinyfiber":
-            libs_include_dirs.append("tiny-support-v1")
-
-        return [task.dir] + [os.path.join(libs_path, d) for d in libs_include_dirs]
-
+        include_dirs = ["twist"] + task.conf.lint_includes
+        return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
 
     def lint(self, task, verify=False):
         if task.conf.theory:

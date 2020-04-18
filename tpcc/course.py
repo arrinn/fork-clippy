@@ -171,6 +171,20 @@ class CourseClient:
         with self.build.profile("Release"):
             check_call(["make", task.run_benchmark_target])
 
+    def _include_dirs(self, task):
+        libs_path = os.path.join(self.repo.working_tree_dir, "library")
+
+        libs_include_dirs = [
+            "twist"
+        ]
+
+        # Workaround
+        if task.homework == "3-tinyfiber":
+            libs_include_dirs.append("tiny-support-v1")
+
+        return [task.dir] + [os.path.join(libs_path, d) for d in libs_include_dirs]
+
+
     def lint(self, task, verify=False):
         if task.conf.theory:
             echo.note("Action disabled for theory task")
@@ -194,8 +208,7 @@ class CourseClient:
 
         clang_tidy = ClangTidy.locate()
 
-        include_dirs = [task.dir] + helpers.get_immediate_subdirectories(
-            os.path.join(self.repo.working_tree_dir, "library"))
+        include_dirs = self._include_dirs(task)
 
         echo.echo("Include directories: {}".format(include_dirs))
 

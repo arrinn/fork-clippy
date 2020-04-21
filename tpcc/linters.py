@@ -83,7 +83,7 @@ class ClangTidy(object):
         cmd.append("-std=c++17")
 
         for dir in include_dirs:
-            cmd.extend(["-I", str(dir)])
+            cmd.extend(["-isystem", str(dir)])
 
         return cmd
 

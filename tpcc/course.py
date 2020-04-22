@@ -159,9 +159,9 @@ class CourseClient:
 
         test_runner = create_test_runner(task, self.build)
         if profile:
-            test_runner.test_profile(profile)
+            test_runner.run_all_profile_tests(profile)
         else:
-            test_runner.test_all_profiles()
+            test_runner.run_all_tests()
 
     def benchmark(self, task):
         if task.conf.theory:

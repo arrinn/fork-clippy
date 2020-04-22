@@ -11,6 +11,13 @@ parent = os.path.dirname
 
 # --------------------------------------------------------------------
 
+class TestGroup(object):
+    def __init__(self, targets, profiles):
+        self.targets = targets
+        self.profiles = profiles
+
+# --------------------------------------------------------------------
+
 class TaskConfig(object):
     def __init__(self, json_conf):
         self.json_conf = json_conf
@@ -44,12 +51,31 @@ class TaskConfig(object):
         return self._attr_value("test_targets", required=False) or ["unit_test", "stress_test"]
 
     @property
+    def tests(self):
+        if self._has_attr("test_targets"):
+            return [TestGroup(
+                targets=self.test_targets, profiles=self.test_profiles)]
+        elif self._has_attr("tests"):
+            # test groups
+            groups = []
+            for group_json in self.json_conf["tests"]:
+                groups.append(TestGroup(
+                    targets=group_json["targets"], profiles=group_json["profiles"]))
+            return groups
+        else:
+            raise ClientError("tests not found");
+
+    @property
     def forbidden_patterns(self):
         return self._attr_value("forbidden_patterns", required=False)
 
     @property
     def test_perf(self):
         return self._attr_value("test_perf", required=False)
+
+
+    def _has_attr(self, name):
+        return name in self.json_conf
 
     def _attr_value(self, name, required=True):
         if name in self.json_conf:
@@ -78,10 +104,6 @@ class Task(object):
     @property
     def all_tests_target(self):
         return self._target("run_all_tests")
-
-    @property
-    def test_targets(self):
-        return [self._target(t) for t in self.conf.test_targets]
 
     @property
     def has_benchmark(self):

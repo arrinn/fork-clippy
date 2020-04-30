@@ -244,6 +244,7 @@ class CourseClient:
             "std::atomic",
             "std::mutex",
             "std::condition_variable",
+            "std::thread",
             "Your code goes here",
             "not implemented",
             "Not implemented",

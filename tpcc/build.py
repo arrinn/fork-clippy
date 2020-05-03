@@ -21,10 +21,13 @@ class Build(object):
 
     def __init__(self, git_repo):
         self.path = os.path.join(git_repo.working_tree_dir, 'build')
-        self.profiles = self._load_profiles(self.path)
+        self._reload_profiles()
+
+    def _reload_profiles(self):
+        self.profiles = self._read_profiles(self.path)
 
     @staticmethod
-    def _load_profiles(build_dir):
+    def _read_profiles(build_dir):
         profiles_conf_path = os.path.join(build_dir, 'profiles.json')
 
         if not os.path.exists(profiles_conf_path):
@@ -105,10 +108,14 @@ class Build(object):
 
         entries = profile.entries + common_entries
 
+        echo.echo("CMake options for profile {}: {}".format(profile.name, entries))
+
         return ["cmake"] + prepend("-D", entries) + ["../.."]
 
     def cmake(self):
         helpers.check_tool("cmake")
+
+        self._reload_profiles()
 
         for profile, build_dir in self.profile_build_dirs():
             echo.echo("Generate build scripts for profile {}".format(

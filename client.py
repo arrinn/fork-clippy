@@ -156,6 +156,10 @@ def benchmark_command(args):
     client.benchmark(current_task)
     echo.done()
 
+def format_command(args):
+    current_task = current_dir_task_or_die()
+    client.format(current_task)
+    echo.done()
 
 def lint_command(args):
     current_task = current_dir_task_or_die()
@@ -241,6 +245,9 @@ def create_cmdline_parser():
     benchmark = subparsers.add_parser(
         "benchmark", help="Run benchmark for current task", aliases=["bench"])
     benchmark.set_defaults(cmd=benchmark_command)
+
+    format = subparsers.add_parser("format", help="Apply clang-format to current task sources")
+    format.set_defaults(cmd=format_command)
 
     lint = subparsers.add_parser(
         "lint",

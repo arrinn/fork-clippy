@@ -25,7 +25,7 @@ class ClangFormat(object):
                 "'clang-format' tool not found. See https://clang.llvm.org/docs/ClangFormat.html")
         return cls(binary)
 
-    def apply_to(self, targets, style):
+    def format(self, targets, style):
         cmd = [self.binary, "-style", style, "-i"] + targets
         subprocess.check_call(cmd)
 

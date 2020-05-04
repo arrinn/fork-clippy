@@ -176,6 +176,14 @@ class CourseClient:
         include_dirs = ["twist"] + task.conf.lint_includes
         return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
 
+    def format(self, task):
+        clang_format = ClangFormat.locate()
+        files_to_format = helpers.all_files(task.dir, task.conf.lint_files)
+
+        echo.echo(
+            "Applying clang-format ({}) to {}".format(clang_format.binary, files_to_format))
+        clang_format.format(files_to_format, style="file")
+
     def lint(self, task, verify=False):
         if task.conf.theory:
             echo.note("Action disabled for theory task")
@@ -237,7 +245,7 @@ class CourseClient:
                 files_to_format = list(diffs.keys())
                 echo.echo(
                     "Applying clang-format ({}) to {}".format(clang_format.binary, files_to_format))
-                clang_format.apply_to(files_to_format, style="file")
+                clang_format.format(files_to_format, style="file")
 
     def _search_forbidden_patterns(self, task):
         forbidden_patterns = [

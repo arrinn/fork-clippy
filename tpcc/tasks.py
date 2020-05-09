@@ -121,6 +121,17 @@ class Task(object):
         return "{homework}_{task}_{target}".format(
             homework=self.homework, task=self.name, target=name)
 
+    # TODO: abstract task PL
+
+    @property
+    def all_files_to_lint(self):
+        return helpers.cpp_files(
+            helpers.all_files(self.dir, self.conf.lint_files))
+
+    @property
+    def all_solution_files(self):
+        return helpers.cpp_files(
+            helpers.all_files(self.dir, self.conf.solution_files))
 
 # --------------------------------------------------------------------
 

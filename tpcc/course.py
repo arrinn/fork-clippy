@@ -178,7 +178,7 @@ class CourseClient:
 
     def format(self, task):
         clang_format = ClangFormat.locate()
-        files_to_format = helpers.all_files(task.dir, task.conf.lint_files)
+        files_to_format = task.all_files_to_lint
 
         echo.echo(
             "Applying clang-format ({}) to {}".format(clang_format.binary, files_to_format))
@@ -191,7 +191,7 @@ class CourseClient:
 
         os.chdir(task.dir)
 
-        lint_targets = helpers.all_files(task.dir, task.conf.lint_files)
+        lint_targets = task.all_files_to_lint
 
         if not lint_targets:
             echo.echo("Nothing to lint")
@@ -268,7 +268,7 @@ class CourseClient:
         echo.echo(
             "Searching for forbidden patterns in {}".format(solution_files))
 
-        all_solution_files = helpers.all_files(task.dir, task.conf.solution_files)
+        all_solution_files = task.all_solution_files
 
         for f in all_solution_files:
             source_code = open(f, 'rb').read().decode("utf-8").rstrip()

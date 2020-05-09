@@ -60,7 +60,6 @@ def glob_expand(patterns):
 def filter_out(items, blacklist):
     return [item for item in items if item not in blacklist]
 
-
 def load_json(path):
     if not os.path.exists(path):
         raise RuntimeError("File not found: {}".format(path))
@@ -158,3 +157,12 @@ def load_module(module_name, file_path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+def is_cpp_file(fname):
+    for ext in [".cpp", ".hpp", ".h", ".S"]:
+        if fname.endswith(ext):
+            return True
+    return False
+
+def cpp_files(files):
+    return list(filter(is_cpp_file, files))

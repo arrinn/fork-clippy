@@ -1,6 +1,6 @@
 # TODO
 
-- `commit --nolint`
+- `commit --notidy`
 - Починить варнинги от `clang-tidy`
 - `clang-tidy` трогает только `.cpp`
 - Баг с добавлением файлов одной задачи в другую из-за ошибки на стадии commit

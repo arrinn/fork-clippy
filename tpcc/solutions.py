@@ -178,6 +178,9 @@ class Solutions(object):
     def _default_commit_message(task):
         return "Bump task {}/{}".format(task.homework, task.name)
 
+    def _unstage_all(self):
+        self._git(["reset", "HEAD", "."], cwd=self.repo_dir)
+
     def commit(self, task, message=None, bump=False):
         self._check_attached()
 
@@ -186,6 +189,7 @@ class Solutions(object):
         os.chdir(self.repo_dir)
         echo.echo("Moving to repo {}".format(highlight.path(self.repo_dir)))
 
+        self._unstage_all();
         self._switch_to_master()
 
         task_branch = self._task_branch_name(task)

@@ -37,6 +37,18 @@ def check_tool(name):
         raise ToolNotFound("Cannot locate a tool: '{}'".format(name))
 
 
+def _get_parent_directory(dir_path):
+    return os.path.abspath(os.path.join(dir_path, os.pardir))
+
+def climb(file, start_dir, steps):
+    dir = start_dir
+    for _ in range(steps):
+        if os.path.exists(os.path.join(dir, file)):
+            return dir
+        dir = _get_parent_directory(dir)
+    return None
+
+
 def get_immediate_subdirectories(dir):
     return [os.path.join(dir, child) for child in os.listdir(
         dir) if os.path.isdir(os.path.join(dir, child))]

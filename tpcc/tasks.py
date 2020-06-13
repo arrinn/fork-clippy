@@ -145,12 +145,16 @@ class Tasks(object):
     def tasks_root_directory(git_repo):
         return os.path.join(git_repo.working_tree_dir, 'tasks')
 
-    def get_dir_task(self, dir):
-        task_conf_path = os.path.join(dir, 'task.json')
+    def _find_task_dir(self, start_dir):
+        return helpers.climb("task.json", start_dir, steps=4)
 
-        if not os.path.exists(task_conf_path):
-            logging.debug("Task conf not found: {}".format(task_conf_path))
+    def get_dir_task(self, start_dir):
+        dir = self._find_task_dir(start_dir)
+        if dir is None:
+            logging.debug("Task conf not found: {}".format(start_dir))
             return None
+
+        task_conf_path = os.path.join(dir, 'task.json')
 
         probably_tasks_root_dir = parent(parent(dir))
 

@@ -38,6 +38,9 @@ class ClientConfig:
     def warmup_targets(self):
         return self.config.get_or("warmup_targets", default=[])
 
+    def forbidden_patterns(self):
+        return self.config.get_or("forbidden_patterns", default=[])
+
 class CourseClient:
     def __init__(self):
         self.repo = self._this_client_repo()
@@ -274,15 +277,7 @@ class CourseClient:
                 clang_format.format(files_to_format, style="file")
 
     def _search_forbidden_patterns(self, task):
-        forbidden_patterns = [
-            "std::atomic",
-            "std::mutex",
-            "std::condition_variable",
-            "std::thread",
-            "Your code goes here",
-            "not implemented",
-            "Not implemented",
-        ]
+        forbidden_patterns = self.config.forbidden_patterns()
 
         task_forbidden_patterns = task.conf.forbidden_patterns
         if task_forbidden_patterns:

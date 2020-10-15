@@ -103,7 +103,6 @@ class Build(object):
         common_entries = [
             "CMAKE_CXX_COMPILER={}".format(cxx_compiler.binary),
             "TOOL_BUILD=ON",
-            "TWIST_TESTS=ON"
         ]
 
         entries = profile.entries + common_entries

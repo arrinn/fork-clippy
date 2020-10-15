@@ -16,7 +16,7 @@ def call_with_live_output(cmd, **kwargs):
         shell=False,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        bufsize=1,
+        #bufsize=1,
         **kwargs)
 
     for line in p.stdout:

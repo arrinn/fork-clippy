@@ -199,7 +199,7 @@ class CourseClient:
 
     def _include_dirs(self, task):
         libs_path = os.path.join(self.repo.working_tree_dir, "library")
-        include_dirs = ["twist"] + task.conf.lint_includes
+        include_dirs = [] + task.conf.lint_includes
         return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
 
     def format(self, task):

@@ -1,1 +1,1 @@
-autopep8 --in-place --aggressive *.py tpcc/*.py
+autopep8 --in-place --aggressive *.py clippy/*.py

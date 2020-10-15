@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import tpcc
-from tpcc import ClangCxxCompiler, CourseClient
-from tpcc import echo
-from tpcc.exceptions import ClientError
-from tpcc import highlight
-from tpcc import greeting
+import clippy
+from clippy import ClangCxxCompiler, CourseClient
+from clippy import echo
+from clippy.exceptions import ClientError
+from clippy import highlight
+from clippy import greeting
 
 import argparse
 import getpass
@@ -39,7 +39,7 @@ def print_environment():
 
     try:
         compiler = ClangCxxCompiler.locate()
-    except tpcc.exceptions.ToolNotFound as error:
+    except clippy.exceptions.ToolNotFound as error:
         echo.error(str(error))
         sys.exit(1)
 
@@ -341,7 +341,6 @@ def main():
         sys.exit(1)
 
 # --------------------------------------------------------------------
-
 
 if __name__ == "__main__":
     main()

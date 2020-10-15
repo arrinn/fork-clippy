@@ -79,7 +79,7 @@ class Installer(object):
     def _update_profile(self):
         profile = self._choose_profile()
 
-        if not query_yesno('Add tpcc client to PATH in {}?'.format(profile)):
+        if not query_yesno('Add Clippy client to PATH in {}?'.format(profile)):
             return
 
         command = "if [ -f '{0}' ]; then . '{0}'; fi".format(
@@ -187,7 +187,7 @@ def cli():
     parser.add_argument(
         '-a',
         '--alias',
-        default='tpcc',
+        default='clippy',
         help="alias for client tool")
 
     return parser.parse_args()

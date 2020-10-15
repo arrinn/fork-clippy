@@ -16,7 +16,9 @@ class ClangCxxCompiler(object):
 
     @classmethod
     def locate(cls):
-        binary = helpers.locate_binary(["clang++-8", "clang++-7", "clang++-6.0", "clang++"])
+        binary = helpers.locate_binary([
+            "clang++-10", "clang++-9", "clang++-8", "clang++"
+        ])
         if binary is None:
             raise ToolNotFound("Clang++ compiler not found")
         return cls(binary)

@@ -378,3 +378,15 @@ class CourseClient:
 
     def create_merge_request(self, task):
         self.solutions.merge(task)
+
+    def hi(self):
+        from os.path import dirname
+
+        module_path = os.path.realpath(__file__)
+        tool_root_path = dirname(dirname(module_path))
+        hi_path = os.path.join(tool_root_path, "hi.txt")
+
+        # https://textart.io/cowsay/clippy
+        with open(hi_path, "r") as f:
+            hi_image = f.read(1024 * 1024)
+            print(hi_image)

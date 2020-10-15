@@ -202,6 +202,8 @@ def merge_command(args):
     client.create_merge_request(current_task)
     echo.done()
 
+def hi_command(args):
+    client.hi()
 
 # --------------------------------------------------------------------
 
@@ -314,6 +316,9 @@ def create_cmdline_parser():
     solutions_info = subparsers.add_parser(
         "solutions", help="Print solutions repository info")
     solutions_info.set_defaults(cmd=solutions_info_command)
+
+    hi = subparsers.add_parser("hi", help="Hi, Clippy!")
+    hi.set_defaults(cmd=hi_command)
 
     return parser
 

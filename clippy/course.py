@@ -41,6 +41,9 @@ class ClientConfig:
     def forbidden_patterns(self):
         return self.config.get_or("forbidden_patterns", default=[])
 
+    def tidy_std(self):
+        return self.config.get_or("tidy_std", None)
+
 class CourseClient:
     def __init__(self):
         self.repo = self._this_client_repo()
@@ -233,6 +236,10 @@ class CourseClient:
         # clang-tidy
 
         clang_tidy = ClangTidy.locate()
+
+        std = self.config.tidy_std()
+        if std:
+            clang_tidy.set_std(std)
 
         include_dirs = self._include_dirs(task)
 

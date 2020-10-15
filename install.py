@@ -196,8 +196,10 @@ def cli():
 def install(installer, args):
     installer.install(args.alias)
 
-    print("\nRunning '{} help' to check that client works...".format(args.alias))
-    subprocess.check_call(['bash', '-i', '-c', args.alias + ' help'])
+    test_cmd = 'hi'
+
+    print("\nRunning '{} {}' to check that client works...".format(args.alias, test_cmd))
+    subprocess.check_call(['bash', '-i', '-c', args.alias, test_cmd])
     print("\nStart a new shell for the changes to take effect.")
     print("Type '{} {{cmd}}' for usage.".format(args.alias))
 

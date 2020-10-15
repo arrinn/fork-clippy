@@ -54,7 +54,7 @@ class Solutions(object):
         os.chdir(return_dir)
 
     def _open_config(self):
-        config_path = os.path.join(self.repo_dir, ".clippy")
+        config_path = os.path.join(self.repo_dir, ".clippy-user.json")
 
         template = CONFIG_TEMPLATE
         if not os.path.exists(config_path):

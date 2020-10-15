@@ -35,9 +35,18 @@ class Config:
         if attr not in self.data:
             raise ClientError("Config attribute '{}' not found".format(attr))
 
+    def has(self, attr):
+        return attr in self.data
+
     def get(self, attr):
         self._check_exists(attr)
         return self.data[attr]
+
+    def get_or(self, attr, default):
+        if self.has(attr):
+            return self.get(attr)
+        else:
+            return default
 
     def set(self, attr, value):
         self._check_exists(attr)

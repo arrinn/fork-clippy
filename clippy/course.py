@@ -1,6 +1,7 @@
 from . import helpers
 from . import highlight
 from .benchmark import print_benchmark_reports
+from .config import Config
 from .call import check_call, check_call_user_code, check_output_user_code
 from .echo import echo
 from .exceptions import ClientError
@@ -22,9 +23,25 @@ import sys
 from pathlib import Path
 
 
+class ClientConfig:
+    def __init__(self, repo_dir):
+        self.config = self._open(repo_dir)
+
+    @classmethod
+    def _open(cls, repo_dir):
+        return Config(cls._config_file_path(repo_dir))
+
+    @classmethod
+    def _config_file_path(cls, repo_dir):
+        return os.path.join(repo_dir, ".clippy.json")
+
+    def warmup_targets(self):
+        return self.config.get_or("warmup_targets", default=[])
+
 class CourseClient:
     def __init__(self):
         self.repo = self._this_client_repo()
+        self.config = self._open_client_config()
         self.build = Build(self.repo)
         self.tasks = Tasks(self.repo)
         self._reopen_solutions()
@@ -34,6 +51,9 @@ class CourseClient:
         repo_root_dir = helpers.git_repo_root_dir(
             os.path.dirname(this_tool_real_path))
         return git.Repo(Path(repo_root_dir).parent)
+
+    def _open_client_config(self):
+        return ClientConfig(self.repo.working_tree_dir)
 
     def _reopen_solutions(self):
         self.solutions = Solutions.open(self.repo, ".grade.gitlab-ci.yml")
@@ -56,8 +76,14 @@ class CourseClient:
         self.build.cmake()
 
     # Build common libraries
-    def warmup(self, targets):
-        for target in targets:
+    def warmup(self):
+        warmup_targets = self.config.warmup_targets()
+
+        if not warmup_targets:
+            echo.note("No targets to warmup")
+            return
+
+        for target in self.config.warmup_targets():
             self.build.warmup(target)
 
     def print_current_task(self):

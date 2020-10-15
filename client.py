@@ -103,7 +103,7 @@ def cmake_command(args):
 
 
 def warmup_command(args):
-    client.warmup(targets=["twist"])
+    client.warmup()
     echo.done()
 
 

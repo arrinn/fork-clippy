@@ -52,7 +52,7 @@ def check_call(cmd, **kwargs):
 
     sys.stdout.write('\n{} output:\n'.format(highlight.path(tool)))  # header
 
-    if "CLIPPY_CLIENT_CI" in os.environ:
+    if "CLIPPY_CI" in os.environ:
         _check_call_ci(cmd, **kwargs)
     else:
         _check_call_default(cmd, **kwargs)
@@ -60,13 +60,13 @@ def check_call(cmd, **kwargs):
     sys.stdout.write("\n")  # empty footer line
 
 def check_call_user_code(cmd, **kwargs):
-    if "CLIPPY_CLIENT_CI" in os.environ:
+    if "CLIPPY_CI" in os.environ:
         kwargs["preexec_fn"] = sandbox.setup_sandbox
 
     check_call(cmd, **kwargs)
 
 def check_output_user_code(cmd, **kwargs):
-    if "CLIPPY_CLIENT_CI" in os.environ:
+    if "CLIPPY_CI" in os.environ:
         kwargs["preexec_fn"] = sandbox.setup_sandbox
 
     return subprocess.check_output(cmd, **kwargs)

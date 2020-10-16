@@ -123,7 +123,7 @@ class Build(object):
             check_call(cmake_cmd)
 
     def warmup(self, target):
-        self.cmake()
+        #self.cmake()
         for profile, dir in self.profile_build_dirs():
             echo.echo(
                 "Warming up target {} for profile {}".format(

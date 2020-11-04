@@ -12,7 +12,7 @@ class TestRunner:
     def _binary(self, build_dir, target):
         return os.path.join(build_dir, "tasks", self.task.fullname, "bin", target)
 
-    def _run_tests(self, targets, build_dir):
+    def _run_targets(self, targets, build_dir):
         targets = [self.task._target(t) for t in targets]
 
         for target in targets:
@@ -27,26 +27,21 @@ class TestRunner:
             echo.echo("Test targets {} in profile {}".format(
                 highlight.smth(targets), highlight.smth(profile_name)))
 
-            self._run_tests(targets, build_dir)
+            self._run_targets(targets, build_dir)
 
-    def _run_test_group(self, test_group):
-        # echo.echo("Test targets {} in profiles {}".format(
-        #    highlight.smth(test_group.targets), highlight.smth(test_group.profiles)))
+    def run_tests(self, profile=None):
+        targets = self.task.conf.test_targets
 
-        for profile_name in test_group.profiles:
-            self._run_tests_with_profile(test_group.targets, profile_name)
+        if profile:
+            profiles = [profile]
+        else:
+            profiles = self.task.conf.test_profiles
 
-    def run_all_tests(self):
-        for test_group in self.task.conf.tests:
-            self._run_test_group(test_group)
+        for profile in profiles:
+            self._run_tests_with_profile(targets, profile)
 
         echo.echo("All {}/{} tests completed!".format(
             highlight.homework(self.task.homework), highlight.task(self.task.name)))
-
-    def run_all_profile_tests(self, profile_name):
-        for test_group in self.task.conf.tests:
-            if profile_name in test_group.profiles:
-                self._run_tests_with_profile(test_group.targets, profile_name)
 
 def create_test_runner(task, build):
     return TestRunner(task, build)

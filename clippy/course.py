@@ -64,7 +64,7 @@ class CourseClient:
     def _reopen_solutions(self):
         self.solutions = Solutions.open(self.repo, ".grade.gitlab-ci.yml")
 
-    def update(self):
+    def update(self, with_cmake):
         os.chdir(self.repo.working_tree_dir)
 
         echo.echo("Updating tasks repository\n")
@@ -72,8 +72,9 @@ class CourseClient:
         subprocess.check_call(["git", "pull", "origin", "master"])
         subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
 
-        echo.blank_line()
-        self.cmake()
+        if with_cmake:
+            echo.blank_line()
+            self.cmake()
 
     # Generate build scripts
     def cmake(self, clean=False):

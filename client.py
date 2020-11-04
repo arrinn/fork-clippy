@@ -93,7 +93,7 @@ def current_dir_task_or_die():
 
 
 def update_command(args):
-    client.update()
+    client.update(with_cmake=not args.no_cmake)
     echo.done()
 
 
@@ -220,6 +220,7 @@ def create_cmdline_parser():
     help.set_defaults(cmd=help_command)
 
     update = subparsers.add_parser("update", help="Update local repo (+ submodules)")
+    update.add_argument("--no-cmake", action="store_true", default=False)
     update.set_defaults(cmd=update_command)
 
     cmake = subparsers.add_parser("cmake", help="Generate build scripts")

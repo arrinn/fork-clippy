@@ -44,6 +44,9 @@ class ClientConfig:
     def tidy_std(self):
         return self.config.get_or("tidy_std", None)
 
+    def tidy_includes_path(self):
+        return self.config.get("tidy_includes_path")
+
 class CourseClient:
     def __init__(self):
         self.repo = self._this_client_repo()
@@ -202,7 +205,7 @@ class CourseClient:
             check_call(["make", task.run_benchmark_target])
 
     def _include_dirs(self, task):
-        libs_path = os.path.join(self.repo.working_tree_dir, "library")
+        libs_path = os.path.join(self.repo.working_tree_dir, self.config.tidy_includes_path())
         include_dirs = [] + task.conf.lint_includes
         return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
 
@@ -241,7 +244,7 @@ class CourseClient:
 
         include_dirs = self._include_dirs(task)
 
-        echo.echo("Include directories: {}".format(include_dirs))
+        # echo.echo("Include directories: {}".format(include_dirs))
 
         echo.echo(
             "Checking {} with clang-tidy ({})".format(task.conf.lint_files, clang_tidy.binary))

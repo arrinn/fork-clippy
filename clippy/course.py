@@ -202,7 +202,7 @@ class CourseClient:
             return
 
         with self.build.profile("Release"):
-            check_call(["make", task.run_benchmark_target])
+            check_call(helpers.make_target_command(task.run_benchmark_target))
 
     def _include_dirs(self, task):
         libs_path = os.path.join(self.repo.working_tree_dir, self.config.tidy_includes_path())
@@ -319,7 +319,8 @@ class CourseClient:
 
     def _get_benchmark_scores(self, task):
         with self.build.profile("Release") as build_dir:
-            check_call(["make", task.benchmark_target])
+            check_call(helpers.make_target_command(task.benchmark_target))
+
             benchmark_bin = os.path.join(
                 build_dir,
                 'tasks',

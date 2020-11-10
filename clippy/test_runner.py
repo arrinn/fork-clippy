@@ -1,6 +1,7 @@
 from .call import check_call, check_call_user_code
 from .echo import echo
 from . import highlight
+from . import helpers
 
 import os
 
@@ -17,7 +18,7 @@ class TestRunner:
 
         for target in targets:
             # Build
-            check_call(["make", target])
+            check_call(helpers.make_target_command(target))
             # Run
             binary = self._binary(build_dir, target)
             check_call_user_code([binary])

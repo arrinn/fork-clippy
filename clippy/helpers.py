@@ -61,6 +61,11 @@ def mkdir(dir, parents=False):
     cmd.append(dir)
     subprocess.check_call(cmd)
 
+def make_target_command(target):
+    cmd = ["make", target]
+    if "CLIPPY_CI" not in os.environ:
+        cmd.extend(["-j", str(os.cpu_count())])
+    return cmd
 
 def glob_expand(patterns):
     files = set()

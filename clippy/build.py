@@ -128,4 +128,4 @@ class Build(object):
             echo.echo(
                 "Warming up target {} for profile {}".format(
                     target, profile.name))
-            check_call(["make", target])
+            check_call(helpers.make_target_command(target))

@@ -1,5 +1,5 @@
 # TODO
 
-- `commit --notidy`
+- Перенести `profiles.json` из `build`? Директорию `build` можно удалить, она выглядит необязательной
 - Починить варнинги от `clang-tidy`
 - `clang-tidy` трогает только `.cpp`

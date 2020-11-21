@@ -12,34 +12,35 @@ from . import highlight
 
 # Build directory ("build" directory in course repo)
 
-
-class Build(object):
-    class Profile(object):
+class Build:
+    class Profile:
         def __init__(self, name, entries):
             self.name = name
             self.entries = entries
 
     def __init__(self, git_repo):
+        self.repo_path = git_repo.working_tree_dir
         self.path = os.path.join(git_repo.working_tree_dir, 'build')
         self._reload_profiles()
 
+    def _config_path(self):
+        return os.path.join(self.repo_path, '.clippy-build-profiles.json')
+
     def _reload_profiles(self):
-        self.profiles = self._read_profiles(self.path)
+        self.profiles = self._read_profiles(self._config_path())
 
     @staticmethod
-    def _read_profiles(build_dir):
-        profiles_conf_path = os.path.join(build_dir, 'profiles.json')
-
-        if not os.path.exists(profiles_conf_path):
+    def _read_profiles(config_path):
+        if not os.path.exists(config_path):
             raise ClientError(
-                "Build profiles not found at".format(
-                    highlight.path(profiles_conf_path)))
+                "Build profiles not found at {}".format(
+                    highlight.path(config_path)))
 
         try:
-            profiles_json = helpers.load_json(profiles_conf_path)
+            profiles_json = helpers.load_json(config_path)
         except BaseException:
             raise ClientError(
-                "Cannot load build profiles from {}".format(profiles_conf_path))
+                "Cannot load build profiles from {}".format(config_path))
 
         profiles = []
         for name, entries in profiles_json.items():

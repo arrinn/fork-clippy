@@ -2,7 +2,8 @@
 
 - [Команды](docs/commands.md)
 - [Схема работы](docs/diagram.png)
-- [Конфигурация](docs/config.md)
+- [Конфигурация задачи](docs/task.md)
+- [Конфигурация клиента](docs/config.md)
 
 ---
 

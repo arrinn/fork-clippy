@@ -8,6 +8,7 @@ from clippy import highlight
 from clippy import greeting
 
 import argparse
+import datetime
 import getpass
 import logging
 import os
@@ -33,6 +34,9 @@ def print_command():
     echo.echo("Command running: {}, cwd: {}".format(
         sys.argv[1:], highlight.path(os.getcwd())))
 
+def print_time():
+    now = datetime.datetime.now()
+    echo.echo("Time: {}".format(now))
 
 def print_environment():
     echo.echo("Platform: {}".format(platform.platform()))
@@ -64,6 +68,7 @@ def print_headers():
     print_hello()
     echo.blank_line()
     print_command()
+    print_time()
     print_environment()
 
 

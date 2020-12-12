@@ -36,7 +36,7 @@ def print_command():
 
 def print_time():
     now = datetime.datetime.now()
-    echo.echo("Time: {}".format(now))
+    echo.echo("Time: {}".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 
 def print_environment():
     echo.echo("Platform: {}".format(platform.platform()))
@@ -150,6 +150,12 @@ def test_command(args):
     echo.done()
 
 
+def target_command(args):
+    current_task = current_dir_task_or_die()
+    client.target(current_task, args.target, args.profile)
+    echo.done()
+
+
 def test_perf_command(args):
     current_task = current_dir_task_or_die()
     client.test_performance(current_task)
@@ -249,6 +255,11 @@ def create_cmdline_parser():
     test = subparsers.add_parser("test", help="Run tests for current task")
     test.set_defaults(cmd=test_command)
     test.add_argument('-p', "--profile", required=False)
+
+    target = subparsers.add_parser("target", help="Build and run target for current task")
+    target.set_defaults(cmd=target_command)
+    target.add_argument("target", help="Task target")
+    target.add_argument('-p', "--profile", default="Debug", required=False)
 
     benchmark = subparsers.add_parser(
         "benchmark", help="Run benchmark for current task", aliases=["bench"])

@@ -5,6 +5,28 @@ from . import helpers
 
 import os
 
+class TaskTargets:
+    def __init__(self, task, build):
+        self.task = task
+        self.build = build
+
+    def _binary(self, build_dir, target):
+        return os.path.join(build_dir, "tasks", self.task.fullname, "bin", target)
+
+    def run(self, target, profile):
+        echo.echo("Build and run task target {} in profile {}".format(
+            highlight.smth(target), highlight.smth(profile)))
+
+        target = self.task._target(target)
+
+        with self.build.profile(profile) as build_dir:
+            # Build
+            check_call(helpers.make_target_command(target))
+            # Run
+            binary = self._binary(build_dir, target)
+            check_call_user_code([binary])
+
+
 class TestRunner:
     def __init__(self, task, build):
         self.task = task

@@ -8,7 +8,7 @@ from .exceptions import ClientError
 from .linters import ClangFormat, ClangTidy
 from .build import Build
 from .tasks import Tasks
-from .test_runner import create_test_runner
+from .test_runner import create_test_runner, TaskTargets
 from .solutions import Solutions
 
 import click
@@ -195,6 +195,10 @@ class CourseClient:
 
         test_runner = create_test_runner(task, self.build)
         test_runner.run_tests(profile)
+
+    def target(self, task, target, profile):
+        targets = TaskTargets(task, self.build)
+        targets.run(target, profile)
 
     def benchmark(self, task):
         if task.conf.theory:

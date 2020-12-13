@@ -95,7 +95,8 @@ def get_repo_name(url):
     return name
 
 
-def copy_files(source_dir, dest_dir, names):
+def copy_files(source_dir, dest_dir, names, clear_dest=False):
+    # Check source files
     for name in names:
         source_path = os.path.join(source_dir, name)
         if not os.path.exists(source_path):
@@ -103,6 +104,18 @@ def copy_files(source_dir, dest_dir, names):
                 "File/dir '{}' not found in '{}'".format(
                     name, source_dir))
 
+    # TODO: remove all files from target directory
+
+    if clear_dest:
+        # Remove dest dirs
+        for name in names:
+            source_path = os.path.join(source_dir, name)
+            if os.path.isdir(source_path):
+                dest_path = os.path.join(dest_dir, name)
+                if os.path.exists(dest_path):
+                    dir_util.remove_tree(dest_path)
+
+    # Copy
     for name in names:
         source_path = os.path.join(source_dir, name)
         if os.path.isdir(source_path):

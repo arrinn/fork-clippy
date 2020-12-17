@@ -4,6 +4,7 @@ from . import highlight
 from . import helpers
 
 import os
+import datetime
 
 class TaskTargets:
     def __init__(self, task, build):
@@ -13,18 +14,19 @@ class TaskTargets:
     def _binary(self, build_dir, target):
         return os.path.join(build_dir, "tasks", self.task.fullname, "bin", target)
 
-    def run(self, target, profile):
+    def run(self, target_name, profile):
         echo.echo("Build and run task target {} in profile {}".format(
-            highlight.smth(target), highlight.smth(profile)))
+            highlight.smth(target_name), highlight.smth(profile)))
 
-        target = self.task._target(target)
+        target = self.task._target(target_name)
 
         with self.build.profile(profile) as build_dir:
-            # Build
-            check_call(helpers.make_target_command(target))
-            # Run
-            binary = self._binary(build_dir, target)
-            check_call_user_code([binary])
+            with echo.timed("Target {}".format(highlight.smth(target_name))):
+                # Build
+                check_call(helpers.make_target_command(target))
+                # Run
+                binary = self._binary(build_dir, target)
+                check_call_user_code([binary])
 
 
 class TestRunner:
@@ -35,15 +37,16 @@ class TestRunner:
     def _binary(self, build_dir, target):
         return os.path.join(build_dir, "tasks", self.task.fullname, "bin", target)
 
-    def _run_targets(self, targets, build_dir):
-        targets = [self.task._target(t) for t in targets]
+    def _run_targets(self, task_targets, build_dir):
+        make_targets = [self.task._target(name) for name in task_targets]
 
-        for target in targets:
-            # Build
-            check_call(helpers.make_target_command(target))
-            # Run
-            binary = self._binary(build_dir, target)
-            check_call_user_code([binary])
+        for name, target in zip(task_targets, make_targets):
+            with echo.timed("Target {}".format(highlight.smth(name))):
+                # Build
+                check_call(helpers.make_target_command(target))
+                # Run
+                binary = self._binary(build_dir, target)
+                check_call_user_code([binary])
 
     def _run_tests_with_profile(self, targets, profile_name):
         with self.build.profile(profile_name) as build_dir:

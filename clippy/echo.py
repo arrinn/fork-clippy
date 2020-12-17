@@ -1,8 +1,9 @@
 import json
 import sys
+import contextlib
 
 from . import highlight
-
+from . import helpers
 
 class Echo(object):
     def echo(self, line):
@@ -33,5 +34,11 @@ class Echo(object):
         self.blank_line()
         self.success("Done")
 
+    @contextlib.contextmanager
+    def timed(self, task):
+        stop_watch = helpers.StopWatch()
+        yield
+        seconds = stop_watch.elapsed_seconds()
+        self.echo("{} completed in {:.2f} seconds".format(task, seconds))
 
 echo = Echo()

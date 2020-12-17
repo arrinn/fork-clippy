@@ -1,3 +1,4 @@
+import datetime
 import glob
 import importlib
 import json
@@ -197,3 +198,20 @@ def is_cpp_file(fname):
 
 def cpp_files(files):
     return list(filter(is_cpp_file, files))
+
+class StopWatch:
+    def __init__(self):
+        self.reset()
+
+    @staticmethod
+    def _now():
+        return datetime.datetime.now()
+
+    def reset(self):
+        self.start = self._now()
+
+    def elapsed(self):
+        return self._now() - self.start
+
+    def elapsed_seconds(self):
+        return self.elapsed().total_seconds()

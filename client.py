@@ -172,6 +172,11 @@ def format_command(args):
     client.format(current_task)
     echo.done()
 
+def tidy_command(args):
+    current_task = current_dir_task_or_die()
+    client.tidy(current_task)
+    echo.done()
+
 def lint_command(args):
     current_task = current_dir_task_or_die()
     client.lint(current_task)
@@ -188,7 +193,7 @@ def commit_command(args):
     current_task = current_dir_task_or_die()
 
     if not args.no_lint:
-        client.lint(current_task)
+        client.format(current_task)
         echo.blank_line()
 
     client.commit(current_task, message=args.message, bump=args.bump)
@@ -268,9 +273,12 @@ def create_cmdline_parser():
     format = subparsers.add_parser("format", help="Apply clang-format to current task sources")
     format.set_defaults(cmd=format_command)
 
+    tidy = subparsers.add_parser("tidy", help="Apply clang-tidy to current task sources")
+    tidy.set_defaults(cmd=tidy_command)
+
     lint = subparsers.add_parser(
         "lint",
-        help="Apply clang-format and clang-tidy linters to current task sources", aliases=["style"])
+        help="Apply linters (clang-format and clang-tidy) to current task sources", aliases=["style"])
     lint.set_defaults(cmd=lint_command)
 
     validate = subparsers.add_parser(

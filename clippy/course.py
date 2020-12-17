@@ -208,63 +208,33 @@ class CourseClient:
         with self.build.profile("Release"):
             check_call(helpers.make_target_command(task.run_benchmark_target))
 
-    def _include_dirs(self, task):
-        libs_path = os.path.join(self.repo.working_tree_dir, self.config.tidy_includes_path())
-        include_dirs = [] + task.conf.lint_includes
-        return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
-
-    def format(self, task):
-        clang_format = ClangFormat.locate()
-        files_to_format = task.all_files_to_lint
-
-        echo.echo(
-            "Applying clang-format ({}) to {}".format(clang_format.binary, files_to_format))
-        clang_format.format(files_to_format, style="file")
-
-    def lint(self, task, verify=False):
+    def _get_lint_targets(self, task):
         if task.conf.theory:
             echo.note("Action disabled for theory task")
-            return
-
-        os.chdir(task.dir)
+            return None
 
         lint_targets = task.all_files_to_lint
 
         if not lint_targets:
             echo.echo("Nothing to lint")
-            return
+            return None
+
+        os.chdir(task.dir)
 
         for f in lint_targets:
             if not os.path.exists(f):
                 raise ClientError("Lint target not found: '{}'".format(f))
 
-        # clang-tidy
+        return lint_targets
 
-        clang_tidy = ClangTidy.locate()
 
-        std = self.config.tidy_std()
-        if std:
-            clang_tidy.set_std(std)
+    def _format(self, task, verify):
+        lint_targets = self._get_lint_targets(task)
 
-        include_dirs = self._include_dirs(task)
+        if not lint_targets:
+            return
 
-        # echo.echo("Include directories: {}".format(include_dirs))
-
-        echo.echo(
-            "Checking {} with clang-tidy ({})".format(task.conf.lint_files, clang_tidy.binary))
-
-        if not clang_tidy.check(lint_targets, include_dirs):
-            if verify:
-                raise ClientError("clang-tidy check failed")
-
-            if click.confirm("Do you want to fix these errors?", default=True):
-                echo.echo(
-                    "Applying clang-tidy --fix to {}".format(lint_targets))
-                clang_tidy.fix(lint_targets, include_dirs)
-
-        echo.blank_line()
-
-        # clang-format
+        os.chdir(task.dir)
 
         clang_format = ClangFormat.locate()
 
@@ -287,6 +257,56 @@ class CourseClient:
                 echo.echo(
                     "Applying clang-format ({}) to {}".format(clang_format.binary, files_to_format))
                 clang_format.format(files_to_format, style="file")
+
+    def _tidy_include_dirs(self, task):
+        if not task.conf.lint_includes:
+            return []
+
+        libs_path = os.path.join(self.repo.working_tree_dir, self.config.tidy_includes_path())
+        include_dirs = [] + task.conf.lint_includes
+        return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
+
+    def _tidy(self, task, verify):
+        lint_targets = self._get_lint_targets(task)
+
+        if not lint_targets:
+            return
+
+        os.chdir(task.dir)
+
+        clang_tidy = ClangTidy.locate()
+
+        std = self.config.tidy_std()
+        if std:
+            clang_tidy.set_std(std)
+
+        include_dirs = self._tidy_include_dirs(task)
+
+        # echo.echo("Include directories: {}".format(include_dirs))
+
+        echo.echo(
+            "Checking {} with clang-tidy ({})".format(task.conf.lint_files, clang_tidy.binary))
+
+        if not clang_tidy.check(lint_targets, include_dirs):
+            if verify:
+                raise ClientError("clang-tidy check failed")
+
+            if click.confirm("Do you want to fix these errors?", default=True):
+                echo.echo(
+                    "Applying clang-tidy --fix to {}".format(lint_targets))
+                clang_tidy.fix(lint_targets, include_dirs)
+
+
+    def lint(self, task, verify=False):
+        self._tidy(task, verify)
+        echo.blank_line()
+        self._format(task, verify)
+
+    def format(self, task):
+        self._format(task, verify=False)
+
+    def tidy(self, task):
+        self._tidy(task, verify=False)
 
     def _search_forbidden_patterns(self, task):
         forbidden_patterns = self.config.forbidden_patterns()

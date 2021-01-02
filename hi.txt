@@ -1,5 +1,5 @@
  _________________________________________
-< Hi, I am clippy, your course assistant. >
+< Hi, I am Clippy, your course assistant. >
  -----------------------------------------
  \
   \

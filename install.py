@@ -89,7 +89,7 @@ class Installer(object):
 
     def _is_venv_installed(self):
         try:
-            subprocess.check_call(['python3', '-m', 'venv', '--help'])
+            out = subprocess.check_output(['python3', '-m', 'venv', '--help'])
         except subprocess.CalledProcessError as error:
             return False
         return True

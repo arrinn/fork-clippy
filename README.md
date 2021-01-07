@@ -1,5 +1,9 @@
 # Clippy
 
+_CLI for C++(PP) courses written in PYthon_
+
+---
+
 - [Команды](docs/commands.md)
 - [Схема работы](docs/diagram.png)
 - [Конфигурация задачи](docs/task.md)

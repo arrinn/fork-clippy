@@ -152,7 +152,7 @@ def test_command(args):
 
 def target_command(args):
     current_task = current_dir_task_or_die()
-    client.target(current_task, args.target, args.profile)
+    client.target(current_task, args.target, args.profile, args.args)
     echo.done()
 
 
@@ -265,6 +265,7 @@ def create_cmdline_parser():
     target.set_defaults(cmd=target_command)
     target.add_argument("target", help="Task target")
     target.add_argument('-p', "--profile", default="Debug", required=False)
+    target.add_argument("--args", help="Command line arguments passed to target")
 
     benchmark = subparsers.add_parser(
         "benchmark", help="Run benchmark for current task", aliases=["bench"])

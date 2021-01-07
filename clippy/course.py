@@ -196,9 +196,10 @@ class CourseClient:
         test_runner = create_test_runner(task, self.build)
         test_runner.run_tests(profile)
 
-    def target(self, task, target, profile):
+    def target(self, task, target, profile, args):
+        args = helpers.split_args(args)
         targets = TaskTargets(task, self.build)
-        targets.run(target, profile)
+        targets.run(target, profile, args)
 
     def benchmark(self, task):
         if task.conf.theory:

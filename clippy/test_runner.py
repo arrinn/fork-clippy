@@ -14,19 +14,27 @@ class TaskTargets:
     def _binary(self, build_dir, target):
         return os.path.join(build_dir, "tasks", self.task.fullname, "bin", target)
 
-    def run(self, target_name, profile):
-        echo.echo("Build and run task target {} in profile {}".format(
-            highlight.smth(target_name), highlight.smth(profile)))
+    def run(self, target_name, profile, args):
+        #echo.echo("Build and run task target {} in profile {}".format(
+        #    highlight.smth(target_name), highlight.smth(profile)))
 
         target = self.task._target(target_name)
 
         with self.build.profile(profile) as build_dir:
             with echo.timed("Target {}".format(highlight.smth(target_name))):
-                # Build
+                # 1) Build
+                echo.echo("Build target {} in profile {}".format(
+                    highlight.smth(target_name), highlight.smth(profile)))
+
                 check_call(helpers.make_target_command(target))
-                # Run
+
+                # 2) Run
+                echo.echo("Run target {} with arguments {}".format(
+                    highlight.smth(target_name), args))
+
                 binary = self._binary(build_dir, target)
-                check_call_user_code([binary])
+                cmd = [binary] + args
+                check_call_user_code(cmd)
 
 
 class TestRunner:

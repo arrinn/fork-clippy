@@ -215,3 +215,8 @@ class StopWatch:
 
     def elapsed_seconds(self):
         return self.elapsed().total_seconds()
+
+def split_args(args):
+    if args:
+        return args.split(' ')
+    return []

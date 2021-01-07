@@ -118,7 +118,7 @@ class Task(object):
         return self._target("run_benchmark")
 
     def _target(self, name):
-        return "{homework}_{task}_{target}".format(
+        return "task_{homework}_{task}_{target}".format(
             homework=self.homework, task=self.name, target=name)
 
     # TODO: abstract task PL

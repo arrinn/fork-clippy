@@ -235,7 +235,7 @@ def create_cmdline_parser():
     help = subparsers.add_parser("help", help="print help")
     help.set_defaults(cmd=help_command)
 
-    update = subparsers.add_parser("update", help="Update local repo (+ submodules)")
+    update = subparsers.add_parser("update", help="Update local repo (+ submodules)", aliases=["up"])
     update.add_argument("--no-cmake", action="store_true", default=False)
     update.set_defaults(cmd=update_command)
 
@@ -336,7 +336,7 @@ def create_cmdline_parser():
     push.set_defaults(cmd=push_command)
 
     merge = subparsers.add_parser(
-        "merge-request", help="Create merge request for current task", aliases=["merge"])
+        "merge-request", help="Create merge request for current task", aliases=["mr"])
     merge.set_defaults(cmd=merge_command)
 
     solutions_info = subparsers.add_parser(

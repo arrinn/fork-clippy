@@ -299,7 +299,7 @@ def create_cmdline_parser():
     config.set_defaults(cmd=config_command)
 
     show_config = subparsers.add_parser(
-        "show-config", help="Show client config content", aliases=["showconfig"])
+        "show-config", help="Show client config content")
     show_config.set_defaults(cmd=show_config_command)
 
     attach = subparsers.add_parser(

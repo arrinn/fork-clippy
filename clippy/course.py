@@ -41,11 +41,17 @@ class ClientConfig:
     def forbidden_patterns(self):
         return self.config.get_or("forbidden_patterns", default=[])
 
+    @property
     def tidy_std(self):
         return self.config.get_or("tidy_std", None)
 
+    @property
     def tidy_includes_path(self):
         return self.config.get("tidy_includes_path")
+
+    @property
+    def tidy_common_includes(self):
+        return self.config.get_or("tidy_common_includes", [])
 
 class CourseClient:
     def __init__(self):
@@ -260,11 +266,9 @@ class CourseClient:
                 clang_format.format(files_to_format, style="file")
 
     def _tidy_include_dirs(self, task):
-        if not task.conf.lint_includes:
-            return []
-
-        libs_path = os.path.join(self.repo.working_tree_dir, self.config.tidy_includes_path())
-        include_dirs = [] + task.conf.lint_includes
+        libs_path = os.path.join(self.repo.working_tree_dir, self.config.tidy_includes_path)
+        include_dirs = self.config.tidy_common_includes + task.conf.tidy_includes
+        echo.echo("Clang-tidy libs path: {}, include dirs: {}".format(libs_path, include_dirs))
         return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
 
     def _tidy(self, task, verify):
@@ -277,7 +281,7 @@ class CourseClient:
 
         clang_tidy = ClangTidy.locate()
 
-        std = self.config.tidy_std()
+        std = self.config.tidy_std
         if std:
             clang_tidy.set_std(std)
 

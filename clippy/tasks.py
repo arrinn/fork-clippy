@@ -43,8 +43,8 @@ class TaskConfig(object):
 
     # Workaround for clang-tidy
     @property
-    def lint_includes(self):
-        return self._attr_value("lint_includes", required=False) or []
+    def tidy_includes(self):
+        return self._attr_value("tidy_includes", required=False) or []
 
     @property
     def test_targets(self):

@@ -4,6 +4,12 @@ _CLI for C++(PP) courses written in PYthon_
 
 [The Tragic Life of Clippy, the World's Most Hated Virtual Assistant](https://www.mentalfloss.com/article/504767/tragic-life-clippy-worlds-most-hated-virtual-assistant)
 
+## Disclaimer
+
+Цель утилиты – упростить и унифицировать рутинные действия.
+
+При этом утилита не стремится полностью скрыть от пользователя `git`, `cmake`, линтеры и другие инструменты. Ожидается, что пользователь в минимальной степени владеет этими инструментами.
+
 ## Документация
 
 - [Команды](docs/commands.md)

@@ -1,0 +1,17 @@
+hi
+update
+cmake
+warmup
+status
+test
+format
+tidy
+lint
+config
+show-config
+commit
+push
+merge-request
+attach
+attach-local
+apply

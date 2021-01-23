@@ -76,16 +76,27 @@ class Installer(object):
     def _profile_path(self, profile):
         return os.path.expanduser('~/{}'.format(profile))
 
+    def _add_commands_to_profile(self, profile, commands):
+        with open(self._profile_path(profile), 'a') as f:
+            f.write('\n')
+            f.write("# Clippy\n")
+            for command in commands:
+                f.write(command + '\n')
+
     def _update_profile(self):
         profile = self._choose_profile()
 
         if not query_yesno('Add Clippy client to PATH in {}?'.format(profile)):
             return
 
-        command = "if [ -f '{0}' ]; then . '{0}'; fi".format(
+        activate = "if [ -f '{0}' ]; then . '{0}'; fi".format(
             os.path.join(self.installer_dir, 'activate'))
-        with open(self._profile_path(profile), 'a') as f:
-            f.write('\n' + command + '\n')
+
+        complete = "if [ -f '{0}' ]; then source {0}; fi".format(
+            os.path.join(self.installer_dir, 'complete.bash')
+        )
+
+        self._add_commands_to_profile(profile, [activate, complete])
 
     def _is_venv_installed(self):
         try:
@@ -154,6 +165,27 @@ class Installer(object):
                         self.installer_dir,
                         'bin')))
 
+    def _read_commands_list(self):
+        commands_list_path = os.path.join(self.installer_dir, "commands.txt")
+
+        with open(commands_list_path, 'r') as f:
+            lines = f.read().split('\n')
+            commands = [cmd for cmd in lines if cmd != ""]
+
+        return commands
+
+    def _create_completion_script(self, alias):
+        print("Creating completion script")
+
+        commands = self._read_commands_list()
+
+        commands_list = ' '.join(commands)
+        complete = f"complete -W '{commands_list}' {alias}"
+
+        completion_script_path = os.path.join(self.installer_dir, "complete.bash")
+        with open(completion_script_path, 'w') as f:
+            f.write(complete + "\n")
+
     def install(self, alias):
         if not self._is_venv_installed():
             print('You seem to have no venv installed.')
@@ -162,6 +194,7 @@ class Installer(object):
         self._create_venv()
         self._create_proxy(alias)
         self._create_path_file()
+        self._create_completion_script(alias)
         self._update_profile()
 
     def _remove_venv(self):

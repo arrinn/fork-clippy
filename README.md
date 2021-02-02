@@ -17,4 +17,8 @@ _CLI for C++(PP) courses written in PYthon_
 - [Конфигурация задачи](docs/task.md)
 - [Конфигурация клиента](docs/config.md)
 
+## Благодарности
+
+Оригинальная идея клиента и первая реализация – [Степан Калинин](https://github.com/MrKaStep)
+
 

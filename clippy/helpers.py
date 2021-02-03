@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import subprocess
+import shlex
 from distutils import dir_util
 
 from .exceptions import ToolNotFound, ClientError
@@ -218,5 +219,5 @@ class StopWatch:
 
 def split_args(args):
     if args:
-        return args.split(' ')
+        return shlex.split(args)
     return []

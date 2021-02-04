@@ -11,6 +11,7 @@ class ClangFormat(object):
 
     _names = [
         "clang-format",
+        "clang-format-11",
         "clang-format-10",
         "clang-format-9",
         "clang-format-8",
@@ -51,6 +52,7 @@ class ClangFormat(object):
                 diffs[file_name] = diff
         return diffs
 
+
 class ClangTidy(object):
     def __init__(self, binary, std='c++17'):
         self.binary = binary
@@ -58,6 +60,7 @@ class ClangTidy(object):
 
     _names = [
         "clang-tidy",
+        "clang-tidy-11",
         "clang-tidy-10",
         "clang-tidy-9",
         "clang-tidy-8",

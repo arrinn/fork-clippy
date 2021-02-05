@@ -103,7 +103,7 @@ def update_command(args):
 
 
 def cmake_command(args):
-    client.cmake(args.clean)
+    client.cmake(args.clean, args.profile)
     echo.done()
 
 
@@ -245,6 +245,7 @@ def create_cmdline_parser():
         "--clean",
         action="store_true",
         help="Remove all existing build scripts in build directory")
+    cmake.add_argument('-p', "--profile", required=False, default=None)
 
     warmup = subparsers.add_parser("warmup", help="Warm up build")
     warmup.set_defaults(cmd=warmup_command)

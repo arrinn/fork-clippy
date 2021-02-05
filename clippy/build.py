@@ -123,6 +123,22 @@ class Build:
             cmake_cmd = self._cmake_command(profile)
             check_call(cmake_cmd)
 
+    def cmake_profile(self, name):
+        helpers.check_tool("cmake")
+
+        profile = self._find_profile(name)
+        profile_dir = self._dir(profile)
+
+        if not os.path.exists(profile_dir):
+            helpers.mkdir(profile_dir, parents=True)
+        os.chdir(profile_dir)
+
+        echo.echo("Generate build scripts for profile {}".format(
+            highlight.smth(profile.name)))
+
+        cmake_cmd = self._cmake_command(profile)
+        check_call(cmake_cmd)
+
     def warmup(self, target):
         #self.cmake()
         for profile, dir in self.profile_build_dirs():

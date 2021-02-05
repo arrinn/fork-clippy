@@ -86,10 +86,15 @@ class CourseClient:
             self.cmake()
 
     # Generate build scripts
-    def cmake(self, clean=False):
+    def cmake(self, clean=False, profile=None):
         if clean:
             self.build.reset()
-        self.build.cmake()
+
+        if profile:
+            self.build.cmake_profile(profile)
+        else:
+            self.build.cmake()
+
 
     # Build common libraries
     def warmup(self):

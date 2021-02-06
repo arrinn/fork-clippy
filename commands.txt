@@ -4,9 +4,11 @@ cmake
 warmup
 status
 test
+target
 format
 tidy
 lint
+validate
 config
 show-config
 commit

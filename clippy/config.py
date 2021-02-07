@@ -14,10 +14,14 @@ class Config:
         if not os.path.exists(self.path):
             self._save(template)
 
-        self._load()
+        self._load(template)
 
-    def _load(self):
-        self.data = helpers.load_json(self.path)
+    def _load(self, template):
+        data = template.copy()
+        file_data = helpers.load_json(self.path)
+        data.update(file_data)
+
+        self.data = data
 
     def _save(self, data):
         with open(self.path, 'w') as f:

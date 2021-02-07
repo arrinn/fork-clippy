@@ -22,6 +22,7 @@ CONFIG_TEMPLATE = {
     "name.last": "-",
     "group": "group",
     "assignee": "-",
+    "tags": "",
 }
 
 # Solutions local repository
@@ -296,6 +297,10 @@ class Solutions(object):
             task.homework,
             task.fullname,
         ]
+
+        custom_tags = helpers.parse_list(
+            self.config.get_or("tags", ""))
+        labels.extend(custom_tags)
 
         title = "[{group}] [{student}] {task}".format(
             group=self.config.get("group"),

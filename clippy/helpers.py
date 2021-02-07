@@ -221,3 +221,8 @@ def split_args(args):
     if args:
         return shlex.split(args)
     return []
+
+# split, strip and remove empty items
+def parse_list(str, separator=','):
+    parts = [p.strip() for p in str.split(separator)]
+    return [p for p in parts if p]

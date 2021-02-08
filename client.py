@@ -133,14 +133,13 @@ def solutions_info_command(args):
 
 
 def show_config_command(args):
-    config = client.solutions.config
-    echo.echo(highlight.path(config.path) + ":")
-    echo.write(config.format())
+    client.solutions.print_config()
     echo.done()
 
 
 def config_command(args):
     client.solutions.config.set(args.attr, args.value)
+    client.solutions.print_config()
     echo.done()
 
 

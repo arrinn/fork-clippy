@@ -140,6 +140,10 @@ class Solutions(object):
         self._check_attached()
         return self.config_
 
+    def print_config(self):
+        echo.echo(highlight.path(self.config.path) + ":")
+        echo.write(self.config.format())
+
     @property
     def remote(self):
         self._check_attached()

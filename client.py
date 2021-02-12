@@ -224,7 +224,7 @@ def hi_command(args):
 
 
 def create_cmdline_parser():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog="clippy")
 
     def help_command(args):
         parser.print_help()

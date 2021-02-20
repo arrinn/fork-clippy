@@ -47,6 +47,7 @@ $ clippy cmake --help
 | `format` | Отформатировать код решения с помощью [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html). Используется конфиг `.clang-format` из корня репозитория |
 | `tidy` | Применить [`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/) на решении задачи. Используется конфиг `.clang-tidy` из корня репозитория |
 | `lint` | Применить линтеры (`clang-format` и `clang-tidy`) на решении задачи |
+| `validate` | Проверить решение на соответствие style guide-у и на наличие запрещенных паттернов (см. `forbidden_patterns` в конфиге задачи) |
 
 ## Сабмит решений
 

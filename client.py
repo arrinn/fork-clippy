@@ -60,7 +60,7 @@ def print_environment():
 def print_local_repo(git_repo):
     echo.echo("Repository root directory: {}".format(
         highlight.path(git_repo.working_tree_dir)))
-    echo.echo("Git current commit: {}".format(git_repo.head.commit.hexsha))
+    echo.echo("Git commit: {}".format(git_repo.head.commit.hexsha))
 
 
 def print_headers():

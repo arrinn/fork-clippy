@@ -145,7 +145,7 @@ def config_command(args):
 
 def test_command(args):
     current_task = current_dir_task_or_die()
-    client.test(current_task, profile=args.profile)
+    client.test(current_task)
     echo.done()
 
 
@@ -259,7 +259,6 @@ def create_cmdline_parser():
 
     test = subparsers.add_parser("test", help="Run tests for current task")
     test.set_defaults(cmd=test_command)
-    test.add_argument('-p', "--profile", required=False)
 
     target = subparsers.add_parser("target", help="Build and run target for current task")
     target.set_defaults(cmd=target_command)

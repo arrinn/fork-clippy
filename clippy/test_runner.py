@@ -63,16 +63,13 @@ class TestRunner:
 
             self._run_targets(targets, build_dir)
 
-    def run_tests(self, profile=None):
-        targets = self.task.conf.test_targets
+    def _run_test_group(self, group):
+        for profile in group.profiles:
+            self._run_tests_with_profile(group.targets, profile)
 
-        if profile:
-            profiles = [profile]
-        else:
-            profiles = self.task.conf.test_profiles
-
-        for profile in profiles:
-            self._run_tests_with_profile(targets, profile)
+    def run_tests(self):
+        for g in self.task.conf.tests:
+            self._run_test_group(g);
 
         echo.echo("All {}/{} tests completed!".format(
             highlight.homework(self.task.homework), highlight.task(self.task.name)))

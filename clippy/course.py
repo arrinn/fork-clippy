@@ -199,13 +199,13 @@ class CourseClient:
     def current_task(self):
         return self.tasks.current_dir_task()
 
-    def test(self, task, profile=None):
+    def test(self, task):
         if task.conf.theory:
             echo.note("Action disabled for theory task")
             return
 
         test_runner = create_test_runner(task, self.build)
-        test_runner.run_tests(profile)
+        test_runner.run_tests()
 
     def target(self, task, target, profile, args):
         args = helpers.split_args(args)

@@ -87,7 +87,10 @@ class Installer(object):
         profile = self._choose_profile()
 
         if not query_yesno('Add Clippy client to PATH in {}?'.format(profile)):
+            print("Rejected")
             return
+
+        print("Ok, adding to {}".format(profile))
 
         activate = "if [ -f '{0}' ]; then . '{0}'; fi".format(
             os.path.join(self.installer_dir, 'activate'))

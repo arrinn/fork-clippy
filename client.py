@@ -263,7 +263,7 @@ def create_cmdline_parser():
     target = subparsers.add_parser("target", help="Build and run target for current task")
     target.set_defaults(cmd=target_command)
     target.add_argument("target", help="Task target")
-    target.add_argument('-p', "--profile", default="Debug", required=False)
+    target.add_argument('-p', "--profile", default="Debug", required=True)
     target.add_argument("--args", help="Command line arguments passed to target")
 
     benchmark = subparsers.add_parser(

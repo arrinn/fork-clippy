@@ -3,7 +3,7 @@ import os
 import shutil
 
 from .call import check_call
-from .compiler import ClangCxxCompiler
+from .compiler import ClangCxxCompiler, ClangCCompiler
 from .echo import echo
 from .exceptions import ClientError
 from . import helpers
@@ -100,9 +100,11 @@ class Build:
             return [prefix + item for item in items]
 
         cxx_compiler = ClangCxxCompiler.locate()
+        c_compiler = ClangCCompiler.locate()
 
         common_entries = [
             "CMAKE_CXX_COMPILER={}".format(cxx_compiler.binary),
+            "CMAKE_C_COMPILER={}".format(c_compiler.binary),
             "TOOL_BUILD=ON",
         ]
 

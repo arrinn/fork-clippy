@@ -54,9 +54,9 @@ class ClangFormat(object):
 
 
 class ClangTidy(object):
-    def __init__(self, binary, std='c++17'):
+    def __init__(self, binary):
         self.binary = binary
-        self.std = std
+        self.compiler_options = None
 
     _names = [
         "clang-tidy",
@@ -74,8 +74,8 @@ class ClangTidy(object):
                 "'clang-tidy' tool not found. See http://clang.llvm.org/extra/clang-tidy/")
         return cls(binary)
 
-    def set_std(self, std):
-        self.std = std
+    def set_compiler_options(self, options):
+        self.compiler_options = options
 
     def _make_command(self, targets, include_dirs, fix=True):
         cmd = [self.binary] + targets + ["--quiet"]
@@ -84,7 +84,9 @@ class ClangTidy(object):
 
         cmd.append("--")
 
-        cmd.append("-std=" + self.std)
+        if self.compiler_options:
+            for opt in self.compiler_options:
+                cmd.append(opt)
 
         for dir in include_dirs:
             cmd.extend(["-isystem", str(dir)])

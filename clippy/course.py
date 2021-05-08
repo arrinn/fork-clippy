@@ -42,8 +42,8 @@ class ClientConfig:
         return self.config.get_or("forbidden_patterns", default=[])
 
     @property
-    def tidy_std(self):
-        return self.config.get_or("tidy_std", None)
+    def tidy_compiler_options(self):
+        return self.config.get_or("tidy_compiler_options", default=[])
 
     @property
     def tidy_includes_path(self):
@@ -286,9 +286,9 @@ class CourseClient:
 
         clang_tidy = ClangTidy.locate()
 
-        std = self.config.tidy_std
-        if std:
-            clang_tidy.set_std(std)
+        compiler_options = self.config.tidy_compiler_options
+        if compiler_options:
+            clang_tidy.set_compiler_options(compiler_options)
 
         include_dirs = self._tidy_include_dirs(task)
 

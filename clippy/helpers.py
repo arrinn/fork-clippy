@@ -8,6 +8,8 @@ import subprocess
 import shlex
 from distutils import dir_util
 
+import git
+
 from .exceptions import ToolNotFound, ClientError
 
 try:
@@ -178,6 +180,14 @@ def check_gitlab(url):
     raise ClientError(
         "Expected gitlab.com repository, provided: '{}'".format(url))
 
+def is_git_repo(path):
+    try:
+        _ = git.Repo(path).git_dir
+        return True
+    except git.exc.InvalidGitRepositoryError:
+        return False
+
+    return False
 
 def git_repo_root_dir(cwd):
     output = subprocess.check_output(

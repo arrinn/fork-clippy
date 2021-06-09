@@ -171,7 +171,8 @@ class CourseClient:
             raise ClientError(
                 "Solutions local repo not found: '{}'".format(solutions_repo_dir))
 
-        # TODO(Lipovsky): is git repo?
+        if not helpers.is_git_repo(solutions_repo_dir):
+            raise ClientError("Not a git repo: '{}'".format(solutions_repo_dir))
 
         # rewrite link
         link_path = os.path.join(

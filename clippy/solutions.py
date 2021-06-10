@@ -169,12 +169,12 @@ class Solutions(object):
 
     def _switch_to_or_create_branch(self, branch):
         try:
-            self._git(["checkout", branch], cwd=self.repo_dir)
+            self._git(["switch", branch], cwd=self.repo_dir)
         except subprocess.CalledProcessError:
-            self._git(["checkout", "-b", branch], cwd=self.repo_dir)
+            self._git(["switch", "-c", branch], cwd=self.repo_dir)
 
     def _switch_to_branch(self, name):
-        self._git(["checkout", name], cwd=self.repo_dir)
+        self._git(["switch", name], cwd=self.repo_dir)
 
     def _switch_to_master(self):
         self._switch_to_branch("master")

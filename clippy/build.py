@@ -18,9 +18,9 @@ class Build:
             self.name = name
             self.entries = entries
 
-    def __init__(self, git_repo):
+    def __init__(self, git_repo, build_dir):
         self.repo_path = git_repo.working_tree_dir
-        self.path = os.path.join(git_repo.working_tree_dir, 'build')
+        self.path = build_dir
         self._reload_profiles()
 
     def _config_path(self):
@@ -94,8 +94,7 @@ class Build:
         finally:
             os.chdir(cwd)
 
-    @staticmethod
-    def _cmake_command(profile):
+    def _cmake_command(self, profile):
         def prepend(prefix, items):
             return [prefix + item for item in items]
 
@@ -112,7 +111,7 @@ class Build:
 
         echo.echo("CMake options for profile {}: {}".format(profile.name, entries))
 
-        return ["cmake"] + prepend("-D", entries) + ["../.."]
+        return ["cmake"] + prepend("-D", entries) + [self.repo_path]
 
     def cmake(self):
         helpers.check_tool("cmake")

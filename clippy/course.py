@@ -53,13 +53,24 @@ class ClientConfig:
     def tidy_common_includes(self):
         return self.config.get_or("tidy_common_includes", [])
 
+    @property
+    def build_dir(self):
+        return self.config.get_or("build_dir", default="build")
+
 class CourseClient:
     def __init__(self):
         self.repo = self._this_client_repo()
         self.config = self._open_client_config()
-        self.build = Build(self.repo)
+        self.build = Build(self.repo, self._build_dir())
         self.tasks = Tasks(self.repo)
         self._reopen_solutions()
+
+    def _build_dir(self):
+        build_dir = self.config.build_dir
+        if os.path.isabs(build_dir):
+            return build_dir
+        else:
+            return os.path.join(self.repo.working_tree_dir, build_dir)
 
     def _this_client_repo(self):
         this_tool_real_path = os.path.realpath(__file__)

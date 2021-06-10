@@ -220,7 +220,6 @@ class CourseClient:
         test_runner.run_tests()
 
     def target(self, task, target, profile, args):
-        args = helpers.split_args(args)
         targets = TaskTargets(task, self.build)
         targets.run(target, profile, args)
 

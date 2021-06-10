@@ -151,7 +151,7 @@ def test_command(args):
 
 def target_command(args):
     current_task = current_dir_task_or_die()
-    client.target(current_task, args.target, args.profile, args.args)
+    client.target(current_task, args.target, args.profile, args.target_args)
     echo.done()
 
 
@@ -222,7 +222,6 @@ def hi_command(args):
 
 # --------------------------------------------------------------------
 
-
 def create_cmdline_parser():
     parser = argparse.ArgumentParser(prog="clippy")
 
@@ -263,8 +262,8 @@ def create_cmdline_parser():
     target = subparsers.add_parser("target", help="Build and run target for current task")
     target.set_defaults(cmd=target_command)
     target.add_argument("target", help="Task target")
-    target.add_argument('-p', "--profile", default="Debug", required=True)
-    target.add_argument("--args", help="Command line arguments passed to target")
+    target.add_argument("profile", help="Build profile")
+    target.add_argument("target_args", nargs=argparse.REMAINDER)
 
     benchmark = subparsers.add_parser(
         "benchmark", help="Run benchmark for current task", aliases=["bench"])

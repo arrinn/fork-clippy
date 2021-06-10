@@ -356,7 +356,7 @@ class Solutions(object):
         if force or click.confirm(
                 "Apply solutions to task {}?".format(task.fullname)):
             echo.echo("Applying solution from solutions repo...")
-            helpers.copy_files(task_dir, task.dir, task.conf.solution_files)
+            helpers.copy_files(task_dir, task.dir, task.conf.solution_files, clear_dest=True)
 
         # TODO: does new gitlab-runner fetch master?
         #self._switch_to_master()

@@ -116,6 +116,10 @@ class Build:
     def cmake(self):
         helpers.check_tool("cmake")
 
+        echo.echo("Build directory: {}".format(
+            highlight.path(self.path)))
+        echo.blank_line()
+
         self._reload_profiles()
 
         for profile, build_dir in self.profile_build_dirs():

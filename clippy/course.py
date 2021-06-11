@@ -281,8 +281,15 @@ class CourseClient:
                     "Applying clang-format ({}) to {}".format(clang_format.binary, files_to_format))
                 clang_format.format(files_to_format, style="file")
 
+    def _tidy_libs_path(self):
+        includes_path = self.config.tidy_includes_path
+        if os.path.isabs(includes_path):
+            return includes_path
+        else:
+            return os.path.join(self.repo.working_tree_dir, includes_path)
+
     def _tidy_include_dirs(self, task):
-        libs_path = os.path.join(self.repo.working_tree_dir, self.config.tidy_includes_path)
+        libs_path = self._tidy_libs_path()
         include_dirs = self.config.tidy_common_includes + task.conf.tidy_includes
         echo.echo("Clang-tidy libs path: {}, include dirs: {}".format(libs_path, include_dirs))
         return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]

@@ -10,6 +10,7 @@ import git
 
 from . import helpers
 from . import highlight
+from . import manytask
 from .echo import echo
 from .exceptions import ClientError
 from .config import Config
@@ -63,28 +64,6 @@ class Solutions(object):
 
         self.config_ = Config(config_path, template=template)
 
-    def _parse_repo_name(self, repo_name):
-        # Expected format: {group}-{name}-U-{login}
-
-        prefix, login = repo_name.rsplit('-u-', 1)
-        group, name = prefix.split('-', 1)
-
-        def capitalize(name):
-            if not name:
-                return name
-            return name[0].upper() + name[1:]
-
-        name_parts = list(map(capitalize, name.split('-')))
-
-        if len(name_parts) == 2:
-            first, last = name_parts
-        elif len(name_parts) > 2:
-            first, last = name_parts[0], '-'.join(name_parts[1:])
-        else:
-            first, last = 'first', 'last'
-
-        return group, first, last, login
-
     def _config_init_template(self):
         template = CONFIG_TEMPLATE
 
@@ -92,16 +71,14 @@ class Solutions(object):
 
         repo_name = helpers.get_repo_name(self.remote)
 
-        EXPECTED_NAME_PATTERN = r"(\S+)-(\S+)-u-(\S+)"
-
-        if re.match(EXPECTED_NAME_PATTERN, repo_name):
+        if manytask.maybe_from_manytask(repo_name):
             try:
-                group, first, last, login = self._parse_repo_name(repo_name)
+                group, first_name, last_name, user = manytask.parse_user_info(repo_name)
 
                 template["group"] = group
-                template["name.first"] = first
-                template["name.last"] = last
-                template["gitlab.user"] = login
+                template["name.first"] = first_name
+                template["name.last"] = last_name
+                template["gitlab.user"] = user
             except Exception:
                 pass
 

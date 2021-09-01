@@ -30,13 +30,14 @@ CONFIG_TEMPLATE = {
 
 
 class Solutions(object):
-    def __init__(self, repo_dir, task_ci_config):
+    def __init__(self, repo_dir, task_ci_config, default_assignee):
         if repo_dir and not os.path.exists(repo_dir):
             raise RuntimeError(
                 "Solutions repository not found at '{}'".format(repo_dir))
 
         self.repo_dir = repo_dir
         self.task_ci_config_path = task_ci_config
+        self.default_assignee = default_assignee
 
         if repo_dir:
             self._open_config()
@@ -82,12 +83,15 @@ class Solutions(object):
             except Exception:
                 pass
 
+        if self.default_assignee:
+            template["assignee"] = self.default_assignee
+
         return template
 
     @staticmethod
-    def open(tasks_repo, task_ci_config):
+    def open(tasks_repo, config):
         tasks_repo_dir = tasks_repo.working_tree_dir
-        task_ci_config = os.path.join(tasks_repo_dir, task_ci_config)
+        task_ci_config = os.path.join(tasks_repo_dir, config.get("task_ci_config"))
 
         link_path = os.path.join(tasks_repo_dir, "client/.solutions")
 
@@ -102,7 +106,10 @@ class Solutions(object):
                 os.remove(link_path)  # outdated
                 solutions_repo_dir = None
 
-        return Solutions(solutions_repo_dir, task_ci_config)
+        default_assignee = config.get_or("default_assignee", None)
+
+        return Solutions(solutions_repo_dir,
+                         task_ci_config, default_assignee)
 
     @property
     def attached(self):

@@ -48,7 +48,7 @@ class CourseClient:
         return Config(path)
 
     def _reopen_solutions(self):
-        self.solutions = Solutions.open(self.repo, ".grade.gitlab-ci.yml")
+        self.solutions = Solutions.open(self.repo, self.config)
 
     def update(self, with_cmake):
         os.chdir(self.repo.working_tree_dir)

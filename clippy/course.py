@@ -22,41 +22,6 @@ import sys
 
 from pathlib import Path
 
-
-class ClientConfig:
-    def __init__(self, repo_dir):
-        self.config = self._open(repo_dir)
-
-    @classmethod
-    def _open(cls, repo_dir):
-        return Config(cls._config_file_path(repo_dir))
-
-    @classmethod
-    def _config_file_path(cls, repo_dir):
-        return os.path.join(repo_dir, ".clippy.json")
-
-    def warmup_targets(self):
-        return self.config.get_or("warmup_targets", default=[])
-
-    def forbidden_patterns(self):
-        return self.config.get_or("forbidden_patterns", default=[])
-
-    @property
-    def tidy_compiler_options(self):
-        return self.config.get_or("tidy_compiler_options", default=[])
-
-    @property
-    def tidy_includes_path(self):
-        return self.config.get("tidy_includes_path")
-
-    @property
-    def tidy_common_includes(self):
-        return self.config.get_or("tidy_common_includes", [])
-
-    @property
-    def build_dir(self):
-        return self.config.get_or("build_dir", default="build")
-
 class CourseClient:
     def __init__(self):
         self.repo = self._this_client_repo()
@@ -66,7 +31,7 @@ class CourseClient:
         self._reopen_solutions()
 
     def _build_dir(self):
-        build_dir = self.config.build_dir
+        build_dir = self.config.get_or("build_dir", default="build")
         if os.path.isabs(build_dir):
             return build_dir
         else:
@@ -79,7 +44,8 @@ class CourseClient:
         return git.Repo(Path(repo_root_dir).parent)
 
     def _open_client_config(self):
-        return ClientConfig(self.repo.working_tree_dir)
+        path = os.path.join(self.repo.working_tree_dir, ".clippy.json")
+        return Config(path)
 
     def _reopen_solutions(self):
         self.solutions = Solutions.open(self.repo, ".grade.gitlab-ci.yml")
@@ -109,13 +75,13 @@ class CourseClient:
 
     # Build common libraries
     def warmup(self):
-        warmup_targets = self.config.warmup_targets()
+        warmup_targets = self.config.get_or("warmup_targets", default=[])
 
         if not warmup_targets:
             echo.note("No targets to warmup")
             return
 
-        for target in self.config.warmup_targets():
+        for target in warmup_targets:
             self.build.warmup(target)
 
     def print_current_task(self):
@@ -282,7 +248,7 @@ class CourseClient:
                 clang_format.format(files_to_format, style="file")
 
     def _tidy_libs_path(self):
-        includes_path = self.config.tidy_includes_path
+        includes_path = self.config.get("tidy_includes_path")
         if os.path.isabs(includes_path):
             return includes_path
         else:
@@ -290,8 +256,12 @@ class CourseClient:
 
     def _tidy_include_dirs(self, task):
         libs_path = self._tidy_libs_path()
-        include_dirs = self.config.tidy_common_includes + task.conf.tidy_includes
+
+        tidy_common_includes = self.config.get_or("tidy_common_includes", [])
+        include_dirs = tidy_common_includes + task.conf.tidy_includes
+
         echo.echo("Clang-tidy libs path: {}, include dirs: {}".format(libs_path, include_dirs))
+
         return [task.dir] + [os.path.join(libs_path, d) for d in include_dirs]
 
     def _tidy(self, task, verify):
@@ -304,7 +274,7 @@ class CourseClient:
 
         clang_tidy = ClangTidy.locate()
 
-        compiler_options = self.config.tidy_compiler_options
+        compiler_options = self.config.get_or("tidy_compiler_options", default=[])
         if compiler_options:
             clang_tidy.set_compiler_options(compiler_options)
 
@@ -337,7 +307,7 @@ class CourseClient:
         self._tidy(task, verify=False)
 
     def _search_forbidden_patterns(self, task):
-        forbidden_patterns = self.config.forbidden_patterns()
+        forbidden_patterns = self.config.get_or("forbidden_patterns", default=[])
 
         task_forbidden_patterns = task.conf.forbidden_patterns
         if task_forbidden_patterns:

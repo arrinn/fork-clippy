@@ -1,4 +1,3 @@
-from . import helpers
 
 def _raise_parsing_error(repo_name):
     raise RuntimeError("Unexpected repository name format: '{}'".format(repo_name))
@@ -24,8 +23,10 @@ def _parse_old_format(repo_name):
 
     return group, first_name, last_name, user_name
 
+NEW_FMT_SEPARATOR = '-z-'
+
 def _parse_new_format(repo_name):
-    parts = repo_name.split('-z-', 4)
+    parts = repo_name.split(NEW_FMT_SEPARATOR, 4)
     if len(parts) != 4:
         _raise_parsing_error(repo_name)
 
@@ -40,13 +41,13 @@ def _parse_new_format(repo_name):
 def parse_user_info(repo_name):
     if '-u-' in repo_name:
         return _parse_old_format(repo_name)
-    elif '-y-' in repo_name:
+    elif NEW_FMT_SEPARATOR in repo_name:
         return _parse_new_format(repo_name)
     else:
         _raise_parsing_error(repo_name)
 
 def maybe_from_manytask(repo_name):
-    return ('-u-' in repo_name) or ('-y-' in repo_name)
+    return ('-u-' in repo_name) or (NEW_FMT_SEPARATOR in repo_name)
 
 
 def _tests():

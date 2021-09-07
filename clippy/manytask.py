@@ -25,7 +25,7 @@ def _parse_old_format(repo_name):
     return group, first_name, last_name, user_name
 
 def _parse_new_format(repo_name):
-    parts = repo_name.split('-y-', 4)
+    parts = repo_name.split('-z-', 4)
     if len(parts) != 4:
         _raise_parsing_error(repo_name)
 
@@ -59,7 +59,7 @@ def _tests():
     assert last_name == "Ivanov"
     assert user_name == "test123"
 
-    group, first_name, last_name, user_name = parse_user_info("test-group-y-anna-maria-y-invanova-petrova-y-test-123")
+    group, first_name, last_name, user_name = parse_user_info("test-group-z-anna-maria-z-invanova-petrova-z-test-123")
     assert group == "test-group"
     assert first_name == "Anna-Maria"
     assert last_name == "Invanova-Petrova"

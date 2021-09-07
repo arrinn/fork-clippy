@@ -53,7 +53,7 @@ def _tests():
     assert _capitalize_str('hello') == 'Hello'
     assert _capitalize_name('ivan-ivanov') == 'Ivan-Ivanov'
 
-    group, first_name, last_name, user_name = parse_user_info("test-y-ivan-y-ivanov-y-test123")
+    group, first_name, last_name, user_name = parse_user_info("test-z-ivan-z-ivanov-z-test123")
     assert group == "test"
     assert first_name == "Ivan"
     assert last_name == "Ivanov"

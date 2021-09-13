@@ -30,7 +30,7 @@ CONFIG_TEMPLATE = {
 
 
 class Solutions(object):
-    def __init__(self, repo_dir, task_ci_config, default_assignee):
+    def __init__(self, repo_dir, task_ci_config, default_assignee, master_branch):
         if repo_dir and not os.path.exists(repo_dir):
             raise RuntimeError(
                 "Solutions repository not found at '{}'".format(repo_dir))
@@ -38,6 +38,7 @@ class Solutions(object):
         self.repo_dir = repo_dir
         self.task_ci_config_path = task_ci_config
         self.default_assignee = default_assignee
+        self.master_branch = master_branch
 
         if repo_dir:
             self._open_config()
@@ -107,9 +108,10 @@ class Solutions(object):
                 solutions_repo_dir = None
 
         default_assignee = config.get_or("default_assignee", None)
+        master_branch = config.get_or("master_branch", "master")
 
         return Solutions(solutions_repo_dir,
-                         task_ci_config, default_assignee)
+                         task_ci_config, default_assignee, master_branch)
 
     @property
     def attached(self):
@@ -161,7 +163,7 @@ class Solutions(object):
         self._git(["checkout", name], cwd=self.repo_dir)
 
     def _switch_to_master(self):
-        self._switch_to_branch("master")
+        self._switch_to_branch(self.master_branch)
 
     @staticmethod
     def _default_commit_message(task):
@@ -306,7 +308,7 @@ class Solutions(object):
 
         merge_request_attrs = {
             'source_branch': task_branch_name,
-            'target_branch': 'master',
+            'target_branch': self.master_branch,
             'labels': labels,
             'title': title,
             'assignee_id': assignee.id

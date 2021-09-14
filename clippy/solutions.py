@@ -195,7 +195,7 @@ class Solutions(object):
             helpers.mkdir(task_dir, parents=True)
 
         echo.echo("Copying solution files: {}".format(solution_files))
-        helpers.copy_files(task.dir, task_dir, solution_files, clear_dest=True)
+        helpers.copy_files(task.dir, task_dir, solution_files, clear_dest=True, make_dirs=True)
 
         echo.echo("Adding solution files to index")
         self._git(["add"] + solution_files, cwd=task_dir)

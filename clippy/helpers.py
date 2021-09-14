@@ -100,7 +100,7 @@ def get_repo_name(url):
     return name
 
 
-def copy_files(source_dir, dest_dir, names, clear_dest=False):
+def copy_files(source_dir, dest_dir, names, clear_dest=False, make_dirs=False):
     # Check source files
     for name in names:
         source_path = os.path.join(source_dir, name)
@@ -123,13 +123,20 @@ def copy_files(source_dir, dest_dir, names, clear_dest=False):
     # Copy
     for name in names:
         source_path = os.path.join(source_dir, name)
+        dest_path = os.path.join(dest_dir, name)
         if os.path.isdir(source_path):
-            # copy directory
-            dest_path = os.path.join(dest_dir, name)
+            # Copy directory
             dir_util.copy_tree(source_path, dest_path)
         else:
-            # copy file
-            shutil.copy(source_path, dest_dir)
+            # Copy file
+
+            dest_file_dir = os.path.dirname(dest_path)
+
+            # Make intermediate dirs
+            if not os.path.exists(dest_file_dir) and make_dirs:
+                os.makedirs(dest_file_dir, exist_ok=True)
+
+            shutil.copy(source_path, dest_path)
 
 def dir_files(path):
     all_files = []

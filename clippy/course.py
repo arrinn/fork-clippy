@@ -55,7 +55,8 @@ class CourseClient:
 
         echo.echo("Updating tasks repository\n")
 
-        subprocess.check_call(["git", "pull", "origin", "master"])
+        master_branch = self.config.get_or("repo_master", "master")
+        subprocess.check_call(["git", "pull", "origin", master_branch])
         subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
 
         if with_cmake:

@@ -108,7 +108,7 @@ class Solutions(object):
                 solutions_repo_dir = None
 
         default_assignee = config.get_or("default_assignee", None)
-        master_branch = config.get_or("master_branch", "master")
+        master_branch = config.get_or("solutions_master", "master")
 
         return Solutions(solutions_repo_dir,
                          task_ci_config, default_assignee, master_branch)

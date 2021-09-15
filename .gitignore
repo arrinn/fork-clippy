@@ -5,4 +5,9 @@ bin/
 env/
 venv/
 
+.solutions
+
+activate
+complete.bash
+
 .idea/

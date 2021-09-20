@@ -12,9 +12,10 @@ parent = os.path.dirname
 # --------------------------------------------------------------------
 
 class TestGroup(object):
-    def __init__(self, targets, profiles):
+    def __init__(self, targets, profiles, args=[]):
         self.targets = targets
         self.profiles = profiles
+        self.args = args
 
 # --------------------------------------------------------------------
 
@@ -60,7 +61,9 @@ class TaskConfig(object):
             groups = []
             for group_json in self.json_conf["tests"]:
                 groups.append(TestGroup(
-                    targets=group_json["targets"], profiles=group_json["profiles"]))
+                    targets=group_json["targets"],
+                    profiles=group_json["profiles"],
+                    args=group_json.get("args", [])))
             return groups
         else:
             raise ClientError("tests not found");

@@ -5,6 +5,7 @@ warmup
 status
 test
 target
+gdb
 format
 tidy
 lint

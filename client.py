@@ -155,6 +155,12 @@ def target_command(args):
     echo.done()
 
 
+def gdb_command(args):
+    current_task = current_dir_task_or_die()
+    client.debug(current_task, args.target, args.profile, args.target_args)
+    echo.done()
+
+
 def test_perf_command(args):
     current_task = current_dir_task_or_die()
     client.test_performance(current_task)
@@ -264,6 +270,12 @@ def create_cmdline_parser():
     target.add_argument("target", help="Task target")
     target.add_argument("profile", help="Build profile")
     target.add_argument("target_args", nargs=argparse.REMAINDER)
+
+    gdb = subparsers.add_parser("gdb", help="Build target for current task and run gdb on it")
+    gdb.set_defaults(cmd=gdb_command)
+    gdb.add_argument("target", help="Task target")
+    gdb.add_argument("profile", help="Build profile")
+    gdb.add_argument("target_args", nargs=argparse.REMAINDER)
 
     benchmark = subparsers.add_parser(
         "benchmark", help="Run benchmark for current task", aliases=["bench"])

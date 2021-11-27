@@ -14,27 +14,41 @@ class TaskTargets:
     def _binary(self, build_dir, target):
         return os.path.join(build_dir, "tasks", self.task.fullname, "bin", target)
 
-    def run(self, target_name, profile, args):
-        #echo.echo("Build and run task target {} in profile {}".format(
-        #    highlight.smth(target_name), highlight.smth(profile)))
+    def _build(self, target_name, profile):
+        echo.echo("Build target {} in profile {}".format(
+            highlight.smth(target_name), highlight.smth(profile)))
 
         target = self.task._target(target_name)
 
         with self.build.profile(profile) as build_dir:
-            with echo.timed("Target {}".format(highlight.smth(target_name))):
-                # 1) Build
-                echo.echo("Build target {} in profile {}".format(
-                    highlight.smth(target_name), highlight.smth(profile)))
+            check_call(helpers.make_target_command(target))
 
-                check_call(helpers.make_target_command(target))
+            return self._binary(build_dir, target)
 
-                # 2) Run
-                echo.echo("Run target {} with arguments {}".format(
-                    highlight.smth(target_name), args))
+    def run(self, target_name, profile, args):
+        #echo.echo("Build and run task target {} in profile {}".format(
+        #    highlight.smth(target_name), highlight.smth(profile)))
+        with echo.timed("Target {}".format(highlight.smth(target_name))):
+            # 1) Build
+            binary = self._build(target_name, profile)
 
-                binary = self._binary(build_dir, target)
-                cmd = [binary] + args
-                check_call_user_code(cmd)
+            # 2) Run
+            echo.echo("Run target {} with arguments {}".format(
+                highlight.smth(target_name), args))
+
+            cmd = [binary] + args
+            check_call_user_code(cmd)
+
+    def debug(self, target_name, profile, args):
+        # 1) Build
+        binary = self._build(target_name, profile)
+
+        # 2) Run
+        echo.echo("Run gdb on target {} with arguments {}".format(
+            highlight.smth(target_name), args))
+
+        cmd = ["gdb", "--args", binary] + args
+        os.execlp(cmd[0], *cmd)
 
 
 class TestRunner:

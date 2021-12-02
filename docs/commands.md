@@ -69,7 +69,7 @@ clippy gdb tests Debug -- --arg1 1 --arg2 2
 | --- | --- |
 | `format` | Форматирует код решения задачи с помощью [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html). Используется конфиг `.clang-format` из корня репозитория |
 | `tidy` | Применяет [`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/) к решению задачи. Используется конфиг `.clang-tidy` из корня репозитория |
-| `lint` | Применяет линтеры (`clang-format` и `clang-tidy`) к решению задачи |
+| `lint` | `tidy` + `format` |
 | `validate` | Проверяет решение на соответствие style guide-у и на наличие запрещенных паттернов (см. `forbidden_patterns` в конфиге задачи) |
 
 ## Решения

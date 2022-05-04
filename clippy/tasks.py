@@ -94,6 +94,14 @@ class TaskConfig(object):
                 raise ClientError(
                     "Required attribute '{}' not found in task config".format(name))
 
+    @staticmethod
+    def load_from(path):
+        try:
+            conf_json = helpers.load_json(path)
+            return TaskConfig(conf_json)
+        except BaseException:
+            raise ClientError(
+                "Cannot load task config: '{}'".format(path))
 
 # --------------------------------------------------------------------
 
@@ -102,7 +110,7 @@ class Task(object):
         self.dir = dir
         self.homework = homework
         self.name = name
-        self.conf = TaskConfig(conf)
+        self.conf = conf
 
     @property
     def fullname(self):
@@ -172,11 +180,7 @@ class Tasks(object):
 
         # definitely task directory
 
-        try:
-            conf = helpers.load_json(task_conf_path)
-        except BaseException:
-            raise ClientError(
-                "Cannot load task config: '{}'".format(task_conf_path))
+        conf = TaskConfig.load_from(task_conf_path)
 
         homework_name = os.path.basename(parent(dir))
         task_name = os.path.basename(dir)

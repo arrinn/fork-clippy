@@ -1,5 +1,6 @@
 from .call import check_call, check_call_user_code
 from .echo import echo
+from .tasks import TaskConfig
 from . import highlight
 from . import helpers
 
@@ -90,8 +91,17 @@ class TestRunner:
         for profile in group.profiles:
             self._run_tests_with_profile(group.targets, group.args, profile)
 
-    def run_tests(self):
-        for g in self.task.conf.tests:
+    def _load_custom_config(self, config_path):
+        return TaskConfig.load_from(config_path)
+
+    def run_tests(self, config_path):
+        if config_path is None:
+            config = self.task.conf
+        else:
+            echo.echo("Load custom tests configuration from {}".format(highlight.path(config_path)))
+            config = self._load_custom_config(config_path)
+
+        for g in config.tests:
             self._run_test_group(g);
 
         echo.echo("All {}/{} tests completed!".format(

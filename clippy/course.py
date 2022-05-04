@@ -190,6 +190,10 @@ class CourseClient:
         targets = TaskTargets(task, self.build)
         targets.run(target, profile, args)
 
+    def debug(self, task, target, profile, args):
+        targets = TaskTargets(task, self.build)
+        targets.debug(target, profile, args)
+
     def benchmark(self, task):
         if task.conf.theory:
             echo.note("Action disabled for theory task")

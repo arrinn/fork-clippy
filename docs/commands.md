@@ -39,6 +39,7 @@ $ clippy cmake --help
 | --- | --- |
 | `test` | Собирает и запускает тесты задачи |
 | `target` | Собирает и запускает конкретную цель задачи |
+| `gdb` | Собирает конкретную цель задачи и запускает на ней [GDB](https://www.gnu.org/software/gdb/) |
 
 #### Команда `target`
 
@@ -51,13 +52,24 @@ clippy target tests Debug
 clippy target tests Debug -- --arg1 1 --arg2 2
 ```
 
+#### Команда `gdb`
+
+```shell
+# Запускаем отладку цели `tests` в сборке `Debug`
+clippy gdb tests Debug
+
+# Запускаем отладку цели и передаем ей дополнительные аргументы:
+# -- разделяет аргументы clippy и аргументы запускаемой цели
+clippy gdb tests Debug -- --arg1 1 --arg2 2
+```
+
 ### Линтеры
 
 | Команда | Описание  |
 | --- | --- |
 | `format` | Форматирует код решения задачи с помощью [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html). Используется конфиг `.clang-format` из корня репозитория |
 | `tidy` | Применяет [`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/) к решению задачи. Используется конфиг `.clang-tidy` из корня репозитория |
-| `lint` | Применяет линтеры (`clang-format` и `clang-tidy`) к решению задачи |
+| `lint` | `tidy` + `format` |
 | `validate` | Проверяет решение на соответствие style guide-у и на наличие запрещенных паттернов (см. `forbidden_patterns` в конфиге задачи) |
 
 ## Решения

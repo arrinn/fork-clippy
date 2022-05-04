@@ -208,7 +208,7 @@ def commit_command(args):
 
 def apply_command(args):
     current_task = current_dir_task_or_die()
-    client.solutions.apply_to(current_task, args.force)
+    client.solutions.apply_to(current_task, commit_hash=args.commit, force=args.force)
     echo.done()
 
 
@@ -338,6 +338,7 @@ def create_cmdline_parser():
 
     apply = subparsers.add_parser(
         "apply", help="Apply solution from solutions repo to current task")
+    apply.add_argument("-c", "--commit", help="Commit hash", default=None)
     apply.add_argument("-f", "--force", action="store_true", default=False)
     apply.set_defaults(cmd=apply_command)
 

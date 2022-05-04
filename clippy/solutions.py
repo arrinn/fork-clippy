@@ -159,8 +159,15 @@ class Solutions(object):
         except subprocess.CalledProcessError:
             self._git(["checkout", "-b", branch], cwd=self.repo_dir)
 
+    # target - commit sha or branch name
+    def _switch_to_target(self, target):
+        self._git(["checkout", target], cwd=self.repo_dir)
+
     def _switch_to_branch(self, name):
-        self._git(["checkout", name], cwd=self.repo_dir)
+        self._switch_to_target(name)
+
+    def _switch_to_commit(self, hash):
+        self._switch_to_target(hash)
 
     def _switch_to_master(self):
         self._switch_to_branch(self.master_branch)
@@ -337,21 +344,25 @@ class Solutions(object):
                     "Merge request for task {} already exists".format(
                         task.fullname))
 
-    def apply_to(self, task, force=False):
+    def apply_to(self, task, commit_hash=None, force=False):
         self._check_attached()
 
         os.chdir(self.repo_dir)
         echo.echo("Moving to repo {}".format(highlight.path(self.repo_dir)))
 
-        task_branch = self._task_branch_name(task)
-        self._switch_to_branch(task_branch)
+        if commit_hash is None:
+            git_target = self._task_branch_name(task)
+        else:
+            git_target = commit_hash
+
+        self._switch_to_target(git_target)
 
         task_dir = self._task_dir(task)
 
         if not os.path.exists(task_dir):
             raise ClientError(
-                "Cannot find task directory '{}' in branch '{}'".format(
-                    task_dir, task_branch))
+                "Cannot find task directory '{}' in '{}'".format(
+                    task_dir, git_target))
 
         if force or click.confirm(
                 "Apply solutions to task {}?".format(task.fullname)):

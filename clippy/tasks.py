@@ -37,6 +37,10 @@ class TaskConfig(object):
     def solution_files(self):
         return self._attr_value("submit_files", required=True)
 
+    @property
+    def do_not_change_files(self):
+        return self._attr_value("do_not_change_files", required=False)
+
     # List of lint targets (= solution files?)
     @property
     def lint_files(self):

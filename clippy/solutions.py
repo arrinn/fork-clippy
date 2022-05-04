@@ -172,8 +172,22 @@ class Solutions(object):
     def _unstage_all(self):
         self._git(["reset", "HEAD", "."], cwd=self.repo_dir)
 
+    def _check_no_diff(self, task, files):
+        for fname in files:
+            fpath = os.path.join(task.dir, fname)
+            diff = subprocess.check_output(["git", "diff", "origin/master", "--", fpath])
+            if diff:
+                raise ClientError("Commit aborted, please revert local changes in '{}'".format(fname));
+
+    def _pre_commit_checks(self, task):
+        do_not_change_files = task.conf.do_not_change_files
+        if do_not_change_files:
+            self._check_no_diff(task, do_not_change_files)
+
     def commit(self, task, message=None, bump=False):
         self._check_attached()
+
+        self._pre_commit_checks(task)
 
         solution_files = task.conf.solution_files
 

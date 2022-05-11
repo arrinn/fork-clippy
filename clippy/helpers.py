@@ -209,7 +209,7 @@ def load_module(module_name, file_path):
     return module
 
 def is_cpp_file(fname):
-    for ext in [".cpp", ".hpp", ".h", ".S"]:
+    for ext in [".cpp", ".hpp", ".ipp", ".h", ".S"]:
         if fname.endswith(ext):
             return True
     return False

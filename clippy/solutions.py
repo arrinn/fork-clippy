@@ -155,13 +155,13 @@ class Solutions(object):
 
     def _switch_to_or_create_branch(self, branch):
         try:
-            self._git(["checkout", branch], cwd=self.repo_dir)
+            self._switch_to_target(branch)
         except subprocess.CalledProcessError:
-            self._git(["checkout", "-b", branch], cwd=self.repo_dir)
+            self._git(["checkout", "-b", branch, "--"], cwd=self.repo_dir)
 
     # target - commit sha or branch name
     def _switch_to_target(self, target):
-        self._git(["checkout", target], cwd=self.repo_dir)
+        self._git(["checkout", target, "--"], cwd=self.repo_dir)
 
     def _switch_to_branch(self, name):
         self._switch_to_target(name)

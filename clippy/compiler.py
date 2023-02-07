@@ -17,7 +17,11 @@ class ClangCCompiler:
     @classmethod
     def locate(cls):
         binary = helpers.locate_binary([
-            "clang-13", "clang-12", "clang-11", "clang-10", "clang-9", "clang-8", "clang"
+            "clang-15",
+            "clang-14",
+            "clang-13",
+            "clang-12",
+            "clang"
         ])
         if binary is None:
             raise ToolNotFound("Clang C compiler not found")

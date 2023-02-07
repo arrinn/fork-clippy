@@ -39,7 +39,7 @@ def task(name):
     return style(name, "yellow", attrs=["bold"])
 
 
-def homework(name):
+def topic(name):
     return style(name, "blue", attrs=["bold"])
 
 

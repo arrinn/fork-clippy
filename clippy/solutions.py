@@ -148,10 +148,10 @@ class Solutions(object):
 
     @staticmethod
     def _task_branch_name(task):
-        return "{}/{}".format(task.homework, task.name)
+        return "{}/{}".format(task.topic, task.name)
 
     def _task_dir(self, task):
-        return "{}/{}".format(task.homework, task.name)
+        return "{}/{}".format(task.topic, task.name)
 
     def _switch_to_or_create_branch(self, branch):
         try:
@@ -174,7 +174,7 @@ class Solutions(object):
 
     @staticmethod
     def _default_commit_message(task):
-        return "Bump task {}/{}".format(task.homework, task.name)
+        return "Bump task {}/{}".format(task.topic, task.name)
 
     def _unstage_all(self):
         self._git(["reset", "HEAD", "."], cwd=self.repo_dir)
@@ -305,7 +305,7 @@ class Solutions(object):
 
         labels = [
             self.config.get("group"),
-            task.homework,
+            task.topic,
             task.fullname,
         ]
 
@@ -317,7 +317,7 @@ class Solutions(object):
             group=self.config.get("group"),
             student="{}-{}".format(self.config.get("name.first"),
                                    self.config.get("name.last")),
-            task="{}/{}".format(task.homework, task.name)
+            task="{}/{}".format(task.topic, task.name)
         )
 
         assignee_username = self.config.get("assignee")

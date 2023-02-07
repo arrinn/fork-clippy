@@ -90,8 +90,8 @@ class CourseClient:
         current_task = self.tasks.current_dir_task()
 
         if current_task:
-            echo.echo("At homework {}, task {}".format(
-                highlight.homework(current_task.homework), highlight.task(current_task.name)))
+            echo.echo("At topic {}, task {}".format(
+                highlight.topic(current_task.topic), highlight.task(current_task.name)))
         else:
             echo.echo("Not in task directory: {}".format(
                 highlight.path(os.getcwd())))
@@ -333,7 +333,7 @@ class CourseClient:
             benchmark_bin = os.path.join(
                 build_dir,
                 'tasks',
-                task.homework,
+                task.topic,
                 task.name,
                 'bin',
                 task.benchmark_target)

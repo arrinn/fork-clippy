@@ -110,15 +110,15 @@ class TaskConfig(object):
 # --------------------------------------------------------------------
 
 class Task(object):
-    def __init__(self, dir, homework, name, conf):
+    def __init__(self, dir, topic, name, conf):
         self.dir = dir
-        self.homework = homework
+        self.topic = topic
         self.name = name
         self.conf = conf
 
     @property
     def fullname(self):
-        return "{}/{}".format(self.homework, self.name)
+        return "{}/{}".format(self.topic, self.name)
 
     @property
     def all_tests_target(self):
@@ -137,8 +137,8 @@ class Task(object):
         return self._target("run_benchmark")
 
     def _target(self, name):
-        return "task_{homework}_{task}_{target}".format(
-            homework=self.homework, task=self.name, target=name)
+        return "task_{topic}_{task}_{target}".format(
+            topic=self.topic, task=self.name, target=name)
 
     # TODO: abstract task PL
 
@@ -186,10 +186,10 @@ class Tasks(object):
 
         conf = TaskConfig.load_from(task_conf_path)
 
-        homework_name = os.path.basename(parent(dir))
+        topic_name = os.path.basename(parent(dir))
         task_name = os.path.basename(dir)
 
-        return Task(dir, homework_name, task_name, conf)
+        return Task(dir, topic_name, task_name, conf)
 
     def current_dir_task(self):
         return self.get_dir_task(os.getcwd())

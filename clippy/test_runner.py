@@ -105,7 +105,7 @@ class TestRunner:
             self._run_test_group(g);
 
         echo.echo("All {}/{} tests completed!".format(
-            highlight.homework(self.task.homework), highlight.task(self.task.name)))
+            highlight.topic(self.task.topic), highlight.task(self.task.name)))
 
 def create_test_runner(task, build):
     return TestRunner(task, build)

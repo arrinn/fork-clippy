@@ -11,12 +11,10 @@ class ClangFormat(object):
 
     _names = [
         "clang-format",
+        "clang-format-15",
+        "clang-format-14",
         "clang-format-13",
         "clang-format-12",
-        "clang-format-11",
-        "clang-format-10",
-        "clang-format-9",
-        "clang-format-8",
     ]
 
     @classmethod
@@ -62,12 +60,10 @@ class ClangTidy(object):
 
     _names = [
         "clang-tidy",
+        "clang-tidy-15",
+        "clang-tidy-14",
         "clang-tidy-13",
         "clang-tidy-12",
-        "clang-tidy-11",
-        "clang-tidy-10",
-        "clang-tidy-9",
-        "clang-tidy-8",
     ]
 
     @classmethod

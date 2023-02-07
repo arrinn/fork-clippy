@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess
 
+from .forbidden import ForbiddenRule
 from .exceptions import ClientError
 from . import helpers
 
@@ -73,8 +74,11 @@ class TaskConfig(object):
             raise ClientError("tests not found");
 
     @property
-    def forbidden_patterns(self):
-        return self._attr_value("forbidden_patterns", required=False)
+    def forbidden(self):
+        rules = []
+        for rule_json in self.json_conf.get("forbidden", []):
+            rules.append(ForbiddenRule(rule_json))
+        return rules
 
     @property
     def test_perf(self):

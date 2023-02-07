@@ -5,6 +5,7 @@ from .config import Config
 from .call import check_call, check_call_user_code, check_output_user_code
 from .echo import echo
 from .exceptions import ClientError
+from .forbidden import ForbiddenPatternsChecker
 from .linters import ClangFormat, ClangTidy
 from .build import Build
 from .tasks import Tasks
@@ -312,27 +313,8 @@ class CourseClient:
         self._tidy(task, verify=False)
 
     def _search_forbidden_patterns(self, task):
-        forbidden_patterns = self.config.get_or("forbidden_patterns", default=[])
-
-        task_forbidden_patterns = task.conf.forbidden_patterns
-        if task_forbidden_patterns:
-            forbidden_patterns.extend(task_forbidden_patterns)
-
-        os.chdir(task.dir)
-
-        solution_files = task.conf.solution_files
-        echo.echo(
-            "Searching for forbidden patterns in {}".format(solution_files))
-
-        all_solution_files = task.all_solution_files
-
-        for f in all_solution_files:
-            source_code = open(f, 'rb').read().decode("utf-8").rstrip()
-            for pattern in forbidden_patterns:
-                if source_code.find(pattern) != -1:
-                    raise ClientError(
-                        "Forbidden pattern '{}' found in file '{}'".format(
-                            pattern, f))
+        checker = ForbiddenPatternsChecker(self.config)
+        checker.check(task)
 
     def validate(self, task):
         if task.conf.theory:

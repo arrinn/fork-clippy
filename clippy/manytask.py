@@ -23,7 +23,7 @@ def _parse_old_format(repo_name):
 
     return group, first_name, last_name, user_name
 
-NEW_FMT_SEPARATOR = '-z-'
+NEW_FMT_SEPARATOR = '-y-'
 
 def _parse_new_format(repo_name):
     parts = repo_name.split(NEW_FMT_SEPARATOR, 4)
@@ -54,13 +54,13 @@ def _tests():
     assert _capitalize_str('hello') == 'Hello'
     assert _capitalize_name('ivan-ivanov') == 'Ivan-Ivanov'
 
-    group, first_name, last_name, user_name = parse_user_info("test-z-ivan-z-ivanov-z-test123")
+    group, first_name, last_name, user_name = parse_user_info("test-y-ivan-y-ivanov-y-test123")
     assert group == "test"
     assert first_name == "Ivan"
     assert last_name == "Ivanov"
     assert user_name == "test123"
 
-    group, first_name, last_name, user_name = parse_user_info("test-group-z-anna-maria-z-invanova-petrova-z-test-123")
+    group, first_name, last_name, user_name = parse_user_info("test-group-y-anna-maria-y-invanova-petrova-y-test-123")
     assert group == "test-group"
     assert first_name == "Anna-Maria"
     assert last_name == "Invanova-Petrova"

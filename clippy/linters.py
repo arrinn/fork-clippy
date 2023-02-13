@@ -9,17 +9,9 @@ class ClangFormat(object):
     def __init__(self, binary):
         self.binary = binary
 
-    _names = [
-        "clang-format",
-        "clang-format-15",
-        "clang-format-14",
-        "clang-format-13",
-        "clang-format-12",
-    ]
-
     @classmethod
-    def locate(cls):
-        binary = helpers.locate_binary(cls._names)
+    def locate(cls, names):
+        binary = helpers.locate_binary(names)
         if not binary:
             raise ToolNotFound(
                 "'clang-format' tool not found. See https://clang.llvm.org/docs/ClangFormat.html")
@@ -58,17 +50,9 @@ class ClangTidy(object):
         self.binary = binary
         self.compiler_options = None
 
-    _names = [
-        "clang-tidy",
-        "clang-tidy-15",
-        "clang-tidy-14",
-        "clang-tidy-13",
-        "clang-tidy-12",
-    ]
-
     @classmethod
-    def locate(cls):
-        binary = helpers.locate_binary(cls._names)
+    def locate(cls, names):
+        binary = helpers.locate_binary(names)
         if not binary:
             raise ToolNotFound(
                 "'clang-tidy' tool not found. See http://clang.llvm.org/extra/clang-tidy/")

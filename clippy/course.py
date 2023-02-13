@@ -231,7 +231,8 @@ class CourseClient:
 
         os.chdir(task.dir)
 
-        clang_format = ClangFormat.locate()
+        clang_format = ClangFormat.locate(
+            self.config.get("format_binaries"))
 
         echo.echo(
             "Checking {} with clang-format ({})".format(task.conf.lint_files, clang_format.binary))
@@ -278,7 +279,8 @@ class CourseClient:
 
         os.chdir(task.dir)
 
-        clang_tidy = ClangTidy.locate()
+        clang_tidy = ClangTidy.locate(
+            self.config.get("tidy_binaries"))
 
         compiler_options = self.config.get_or("tidy_compiler_options", default=[])
         if compiler_options:

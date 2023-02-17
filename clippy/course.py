@@ -5,7 +5,7 @@ from .config import Config
 from .call import check_call, check_call_user_code, check_output_user_code
 from .echo import echo
 from .exceptions import ClientError
-from .forbidden import ForbiddenPatternsChecker
+from .censor import Censor
 from .linters import ClangFormat, ClangTidy
 from .build import Build
 from .tasks import Tasks
@@ -315,8 +315,8 @@ class CourseClient:
         self._tidy(task, verify=False)
 
     def censor(self, task):
-        checker = ForbiddenPatternsChecker(self.config)
-        checker.check(task)
+        censor = Censor(self.config)
+        censor.check(task)
 
     def validate(self, task):
         if task.conf.theory:

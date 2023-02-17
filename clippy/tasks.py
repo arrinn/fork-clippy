@@ -2,7 +2,7 @@ import logging
 import os
 import subprocess
 
-from .forbidden import ForbiddenRule
+from .censor import CensorRule
 from .exceptions import ClientError
 from . import helpers
 
@@ -77,7 +77,7 @@ class TaskConfig(object):
     def forbidden(self):
         rules = []
         for rule_json in self.json_conf.get("forbidden", []):
-            rules.append(ForbiddenRule(rule_json))
+            rules.append(CensorRule(rule_json))
         return rules
 
     @property

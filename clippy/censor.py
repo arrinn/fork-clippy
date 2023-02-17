@@ -5,7 +5,7 @@ from . import helpers
 import os
 
 
-class ForbiddenRule:
+class CensorRule:
     def __init__(self, json_config):
         self.config = json_config
 
@@ -22,7 +22,7 @@ class ForbiddenRule:
         return self.config.get("files", None)
 
 
-class ForbiddenPatternsChecker:
+class Censor:
     def __init__(self, config):
         self.forbidden = self._get_rules(config)
 
@@ -30,7 +30,7 @@ class ForbiddenPatternsChecker:
     def _get_rules(config):
         rules = []
         for json in config.get("forbidden"):
-            rules.append(ForbiddenRule(json))
+            rules.append(CensorRule(json))
         return rules
 
     @staticmethod

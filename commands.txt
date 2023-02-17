@@ -9,6 +9,7 @@ gdb
 format
 tidy
 lint
+censor
 validate
 config
 show-config

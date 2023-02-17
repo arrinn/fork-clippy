@@ -64,7 +64,7 @@ class ForbiddenPatternsChecker:
                     raise ClientError(self._error_report(fpath, pattern, rule))
 
     def check(self, task):
-        echo.echo("Search forbidden patterns...")
+        echo.echo("Censoring...")
 
         rules = self.forbidden + task.conf.forbidden
 

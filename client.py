@@ -187,6 +187,10 @@ def lint_command(args):
     client.lint(current_task)
     echo.done()
 
+def censor_command(args):
+    current_task = current_dir_task_or_die()
+    client.censor(current_task)
+    echo.done()
 
 def validate_command(args):
     current_task = current_dir_task_or_die()
@@ -292,6 +296,9 @@ def create_cmdline_parser():
         "lint",
         help="Apply linters (clang-format and clang-tidy) to current task sources", aliases=["style"])
     lint.set_defaults(cmd=lint_command)
+
+    censor = subparsers.add_parser("censor", help="Search forbidden patterns")
+    censor.set_defaults(cmd=censor_command)
 
     validate = subparsers.add_parser(
         "validate",

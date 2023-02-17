@@ -314,7 +314,7 @@ class CourseClient:
     def tidy(self, task):
         self._tidy(task, verify=False)
 
-    def _search_forbidden_patterns(self, task):
+    def censor(self, task):
         checker = ForbiddenPatternsChecker(self.config)
         checker.check(task)
 
@@ -326,7 +326,7 @@ class CourseClient:
         self.lint(task, verify=True)
         echo.blank_line()
         # NB: after linters!
-        self._search_forbidden_patterns(task)
+        self.censor(task)
 
     def _get_benchmark_scores(self, task):
         with self.build.profile("Release") as build_dir:

@@ -1,4 +1,4 @@
-# Clippy
+# Clippy 📎
 
 _CLI for C++(PP) courses written in PYthon_
 

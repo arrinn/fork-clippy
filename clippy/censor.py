@@ -35,7 +35,7 @@ class Censor:
 
     @staticmethod
     def _files_to_check(task, rule):
-        names = rule.files or task.conf.solution_files
+        names = rule.files or task.conf.lint_files or task.conf.solution_files
         return helpers.cpp_files(helpers.all_files(task.dir, names))
 
     @staticmethod

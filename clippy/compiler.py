@@ -15,14 +15,8 @@ class ClangCCompiler:
         return lines[0].strip().decode("utf-8")
 
     @classmethod
-    def locate(cls):
-        binary = helpers.locate_binary([
-            "clang-15",
-            "clang-14",
-            "clang-13",
-            "clang-12",
-            "clang"
-        ])
+    def locate(cls, names):
+        binary = helpers.locate_binary(names)
         if binary is None:
             raise ToolNotFound("Clang C compiler not found")
         return cls(binary)
@@ -39,14 +33,8 @@ class ClangCxxCompiler:
         return lines[0].strip().decode("utf-8")
 
     @classmethod
-    def locate(cls):
-        binary = helpers.locate_binary([
-            "clang++-15",
-            "clang++-14",
-            "clang++-13",
-            "clang++-12",
-            "clang++"
-        ])
+    def locate(cls, names):
+        binary = helpers.locate_binary(names)
         if binary is None:
             raise ToolNotFound("Clang++ compiler not found")
         return cls(binary)

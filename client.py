@@ -38,23 +38,24 @@ def print_time():
     now = datetime.datetime.now()
     echo.echo("Time: {}".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 
-def print_environment():
+def print_platform():
     echo.echo("Platform: {}".format(platform.platform()))
-
-    try:
-        compiler = ClangCxxCompiler.locate()
-    except clippy.exceptions.ToolNotFound as error:
-        echo.error(str(error))
-        sys.exit(1)
-
-    echo.echo("C++ compiler: {} ({})".format(
-        highlight.path(compiler.binary), compiler.version))
 
     echo.echo(
         "Python: {}, {}, {}".format(
             platform.python_version(),
             platform.python_implementation(),
             highlight.path(sys.executable)))
+
+def print_compilers(config):
+    try:
+        compiler = ClangCxxCompiler.locate(config.get("cxx_compiler_binaries"))
+    except clippy.exceptions.ToolNotFound as error:
+        echo.error(str(error))
+        sys.exit(1)
+
+    echo.echo("C++ compiler: {} ({})".format(
+        highlight.path(compiler.binary), compiler.version))
 
 
 def print_local_repo(git_repo):
@@ -69,7 +70,7 @@ def print_headers():
     echo.blank_line()
     print_command()
     print_time()
-    print_environment()
+    print_platform()
 
 
 print_headers()
@@ -78,6 +79,7 @@ print_headers()
 
 client = CourseClient()
 
+print_compilers(client.config)
 print_local_repo(client.repo)
 echo.blank_line()
 

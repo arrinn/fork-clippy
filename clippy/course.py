@@ -27,7 +27,7 @@ class CourseClient:
     def __init__(self):
         self.repo = self._this_client_repo()
         self.config = self._open_client_config()
-        self.build = Build(self.repo, self._build_dir())
+        self.build = Build(self.repo, self.config, self._build_dir())
         self.tasks = Tasks(self.repo)
         self._reopen_solutions()
 

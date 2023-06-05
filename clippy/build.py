@@ -18,7 +18,8 @@ class Build:
             self.name = name
             self.entries = entries
 
-    def __init__(self, git_repo, build_dir):
+    def __init__(self, git_repo, config, build_dir):
+        self.config = config
         self.repo_path = git_repo.working_tree_dir
         self.path = build_dir
         self._reload_profiles()
@@ -98,8 +99,8 @@ class Build:
         def prepend(prefix, items):
             return [prefix + item for item in items]
 
-        cxx_compiler = ClangCxxCompiler.locate()
-        c_compiler = ClangCCompiler.locate()
+        cxx_compiler = ClangCxxCompiler.locate(self.config.get("cxx_compiler_binaries"))
+        c_compiler = ClangCCompiler.locate(self.config.get("cxx_compiler_binaries"))
 
         common_entries = [
             "CMAKE_CXX_COMPILER={}".format(cxx_compiler.binary),

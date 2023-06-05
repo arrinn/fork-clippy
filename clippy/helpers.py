@@ -217,6 +217,12 @@ def is_cpp_file(fname):
 def cpp_files(files):
     return list(filter(is_cpp_file, files))
 
+def cut_prefix(str, prefix):
+    if str.startswith(prefix):
+        return str[len(prefix):]
+    else:
+        return str
+
 class StopWatch:
     def __init__(self):
         self.reset()

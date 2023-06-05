@@ -145,7 +145,7 @@ def config_command(args):
 
 def test_command(args):
     current_task = current_dir_task_or_die()
-    client.test(current_task, args.config)
+    client.test(current_task, args.config, censor = not args.no_censor)
     echo.done()
 
 
@@ -269,6 +269,7 @@ def create_cmdline_parser():
     test = subparsers.add_parser("test", help="Run tests for current task")
     test.set_defaults(cmd=test_command)
     test.add_argument("--config", required=False, help="Config with test pipeline description")
+    test.add_argument("--no-censor", action="store_true", default=False, help="Skip censoring")
 
     target = subparsers.add_parser("target", help="Build and run target for current task")
     target.set_defaults(cmd=target_command)

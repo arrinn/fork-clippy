@@ -179,10 +179,22 @@ class CourseClient:
     def current_task(self):
         return self.tasks.current_dir_task()
 
-    def test(self, task, config_path):
+    def _censor_before_test(self, task):
+        censor = Censor(self.config)
+        report = censor.check(task)
+
+        if report.has_errors():
+            report.print()
+            if not click.confirm("Are you sure you want to run the tests?", default=True):
+                raise ClientError("Aborting")
+
+    def test(self, task, config_path, censor):
         if task.conf.theory:
             echo.note("Action disabled for theory task")
             return
+
+        if censor:
+            self._censor_before_test(task)
 
         test_runner = create_test_runner(task, self.build)
         test_runner.run_tests(config_path)
@@ -316,7 +328,9 @@ class CourseClient:
 
     def censor(self, task):
         censor = Censor(self.config)
-        censor.check(task)
+        report = censor.check(task)
+        if report.has_errors():
+            report.raise_on_errors()
 
     def validate(self, task):
         if task.conf.theory:

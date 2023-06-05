@@ -100,7 +100,7 @@ class Build:
             return [prefix + item for item in items]
 
         cxx_compiler = ClangCxxCompiler.locate(self.config.get("cxx_compiler_binaries"))
-        c_compiler = ClangCCompiler.locate(self.config.get("cxx_compiler_binaries"))
+        c_compiler = ClangCCompiler.locate(self.config.get("c_compiler_binaries"))
 
         common_entries = [
             "CMAKE_CXX_COMPILER={}".format(cxx_compiler.binary),
